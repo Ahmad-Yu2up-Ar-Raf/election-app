@@ -26,7 +26,7 @@ class Calon extends Model
         'gender',
         'picture',
         'status',
-            'user_id',
+         'user_id',
     ];
 
 
@@ -50,7 +50,7 @@ class Calon extends Model
     }
 
 
-    public function vote():  HasMany
+    public function votes():  HasMany
     {
       return $this->hasMany(Vote::class, 'calon_id');
     }

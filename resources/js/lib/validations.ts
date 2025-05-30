@@ -21,18 +21,18 @@ const imageSchema = z.union([
 
 export const calonSchemaForm = z.object({
   nama: z.string().min(1, "Name is required"),
-  kelas: z.string().min(1, "Class is required"),  
+  kelas: z.string().min(1, "Class is required").max(10, "Class must be less than 50 characters"),  
   visi: z.string().optional(),
   misi: z.string().optional(),
-  status: z.string().min(1, "Status is required"),
-  gender: z.string().min(1, "Gender is required"),
+  status: z.string().min(1, "Status is required").optional(),
+  gender: z.string().min(1, "Gender is required").optional(),
   picture: imageSchema,
 });
 
 // Schema khusus untuk create (harus File)
 export const calonCreateSchema = z.object({
   nama: z.string().min(1, "Name is required"),
-  kelas: z.string().min(1, "Class is required"),
+  kelas: z.string().min(1, "Class is required").max(10, "Class must be less than 50 characters"),
   visi: z.string().optional(),
   misi: z.string().optional(),
   status: z.string().min(1, "Status is required"),
@@ -55,11 +55,11 @@ export const calonCreateSchema = z.object({
 // Schema khusus untuk update (bisa File atau string, tapi tidak required)
 export const calonUpdateSchema = z.object({
   nama: z.string().min(1, "Name is required"),
-  kelas: z.string().min(1, "Class is required"),
+  kelas: z.string().min(1, "Class is required").max(10, "Class must be less than 50 characters"),
   visi: z.string().optional(),
   misi: z.string().optional(),
-  status: z.string().min(1, "Status is required"),
-  gender: z.string().min(1, "Gender is required"),
+  status: z.string().min(1, "Status is required").optional(),
+  gender: z.string().min(1, "Gender is required").optional(),
   picture: z.union([
     z.instanceof(File)
       .refine((file) => file.size <= 2 * 1024 * 1024, {

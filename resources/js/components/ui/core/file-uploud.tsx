@@ -65,13 +65,22 @@ const PictureImageInput = forwardRef<HTMLInputElement, PictureImageInputProps>(
                     null
 
     // Expose the input element ref
-    useImperativeHandle(ref, () => getInputProps()?.ref!.current!)
+    useImperativeHandle(ref, () => {
+      const inputRef = getInputProps()?.ref
+      const element = inputRef && 'current' in inputRef ? inputRef.current : null
+      if (!element) {
+        throw new Error('Input element not found')
+      }
+      return element
+    })
 
     // Handle file changes and notify parent component
     useEffect(() => {
       if (files.length > 0 && onChange) {
         setHasNewFile(true)
-        onChange(files[0].file)
+        if (files[0].file instanceof File) {
+          onChange(files[0].file)
+        }
       }
     }, [files, onChange])
 
@@ -86,13 +95,16 @@ const PictureImageInput = forwardRef<HTMLInputElement, PictureImageInputProps>(
       }
     }
 
-    // Reset hasNewFile ketika form di-reset atau value berubah dari luar
+    // Reset hasNewFile dan files ketika form di-reset atau value berubah dari luar
     useEffect(() => {
-      // Jika value berubah menjadi string (existing image) dan bukan dari user action
-      if (typeof value === 'string' && files.length === 0) {
+      if (value === null || value === undefined) {
+        setHasNewFile(false)
+        // Clear all files from internal state
+        files.forEach(file => removeFile(file.id))
+      } else if (typeof value === 'string' && files.length === 0) {
         setHasNewFile(false)
       }
-    }, [value, files.length])
+    }, [value, files, removeFile])
 
     // Display errors from either the hook or parent component
     const displayErrors = [...errors, ...(error ? [error] : [])]

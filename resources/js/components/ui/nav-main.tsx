@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/fragments/button"
 import {
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/fragments/sidebar"
-import { Link } from "@inertiajs/react"
+import { Link, usePage } from "@inertiajs/react"
 
 export function NavMain({
   items,
@@ -19,10 +20,14 @@ export function NavMain({
     icon?: Icon
   }[]
 }) {
+
+
+    const page = usePage();
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu>
+        {/* <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
               tooltip="Quick Create"
@@ -40,19 +45,23 @@ export function NavMain({
               <span className="sr-only">Inbox</span>
             </Button>
           </SidebarMenuItem>
-        </SidebarMenu>
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-                <Link href={item.url}>
-              <SidebarMenuButton  tooltip={item.title}>
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-                </Link>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        </SidebarMenu> */}
+            <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarMenu className=' space-y-1 '>
+                {items.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton  
+                           asChild isActive={item.url === page.url}
+                            tooltip={{ children: item.title }}
+                        >
+                            <Link href={item.url} prefetch>
+                                {item.icon && <item.icon />}
+                                <span>{item.title}</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                ))}
+            </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
   )

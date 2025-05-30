@@ -14,11 +14,30 @@ class CalonController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $calon = Calon::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $perPage = $request->input('perPage', 10);
+        
+        $query = Calon::where('user_id', Auth::id());
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('kelas', 'like', "%{$search}%");
+            });
+        }
+
+        $calon = $query->orderBy('created_at', 'desc')
+            ->with(['votes' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->withCount('votes')
+            ->paginate($perPage);
+
+        if (request()->has('filter') && request('filter') !== 'all') {
+            $calon->where('status', request('filter') === 'active' ? 'active' : 'inactive');
+        }
 
         $calon->through(function($item) {
             return [
@@ -27,11 +46,26 @@ class CalonController extends Controller
             ];
         });
 
+        // Get votes only for calon owned by current user
+        $votes = \App\Models\Vote::whereIn('calon_id', function($query) {
+            $query->select('id')
+                  ->from('calon')
+                  ->where('user_id', Auth::id());
+        })
+        ->with('calon')
+        ->orderBy('created_at', 'desc')
+        ->get();
+        
         return Inertia::render('dashboard/calon', [
-            'calon' => $calon->items(),
+            'calon' => $calon->items() ?? [],
+            'votes' => $votes,
+            'filters' => [
+                'search' => request('search', ''),
+                'filter' => request('filter', 'all'),
+            ],
             'pagination' => [
                 'data' => $calon->toArray(),
-                'total' => $calon->count(),
+                'total' => $calon->total(),
                 'currentPage' => $calon->currentPage(),
                 'perPage' => $calon->perPage(),
                 'lastPage' => $calon->lastPage(),
@@ -116,7 +150,7 @@ class CalonController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255|unique:calon,nama,' . $calon->id,
             'gender' => 'required|string|in:male,female',
-            'status' => 'required|string|in:active,inactive',
+            'status' => 'required|string',
             'kelas' => 'required|string|max:255',
             'visi' => 'nullable|string|max:1000',
             'misi' => 'nullable|string|max:1000',

@@ -106,6 +106,7 @@ function onSubmit(input: CalonSchemaForm) {
         console.error("Submit error:", error);
         toast.error(`Error: ${Object.values(error).join(', ')}`);
         setLoading(false);
+           form.reset();
       }
     });
   });
@@ -118,8 +119,8 @@ function onSubmit(input: CalonSchemaForm) {
   return (
     <Sheet open={open} onOpenChange={setOpen} modal={true} >
       <SheetTrigger asChild>
-        <Button variant="outline" className=" bg-background" size="sm">
-          <Plus />
+        <Button variant="outline" className=" text-sm  bg-background" size="sm">
+          <Plus  className=" mr-3 "/>
           Add New 
         </Button>
       </SheetTrigger>
@@ -182,7 +183,7 @@ return(
                               Cancel
                             </Button>
                           </DrawerClose>
-                          <Button disabled={loading} className="w-fit dark:bg-primary  dark:text-primary-foreground  bg-primary text-primary-foreground " size={"sm"}>
+                          <Button  disabled={loading} className="w-fit dark:bg-primary  dark:text-primary-foreground  bg-primary text-primary-foreground " size={"sm"}>
                             {loading && <Loader className="animate-spin" />}
                             Add
                           </Button>

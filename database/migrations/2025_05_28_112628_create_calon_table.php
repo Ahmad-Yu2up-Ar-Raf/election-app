@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('nama')->unique();
-            $table->index('gender')->default(Gender::Male->value);
-            $table->index('status')->default(Status::Active->value); 
+           $table->string('gender')->default(Gender::Male->value);
+            $table->string('status')->default(Status::Active->value); 
             $table->string('visi')->nullable();
             $table->string('misi')->nullable();
             $table->string('picture')->nullable();

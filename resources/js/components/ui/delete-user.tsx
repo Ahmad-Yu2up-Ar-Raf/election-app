@@ -1,12 +1,12 @@
 import { useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
 
-import InputError from '@/components/input-error';
+import InputError from '@/components/ui/input-error';
 import { Button } from '@/components/ui/fragments/button';
 import { Input } from '@/components/ui/fragments/input';
 import { Label } from '@/components/ui/fragments/label';
 
-import HeadingSmall from '@/components/heading-small';
+import HeadingSmall from '@/components/ui/heading-small';
 
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/fragments/dialog';
 

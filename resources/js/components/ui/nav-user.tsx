@@ -30,6 +30,7 @@ import { SharedData } from "@/types"
 import { useInitials } from "@/hooks/use-initials"
 import { Link, router } from "@inertiajs/react"
 import { useMobileNavigation } from "@/hooks/use-mobile-navigation"
+import { Settings } from "lucide-react"
 
 export function NavUser({
   user,
@@ -88,18 +89,13 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
-              </DropdownMenuItem>
+            <Link  className=" w-full" href={'/settings/profile'} as="button" >
+            <DropdownMenuItem>
+              <Settings/>
+              Settings
+            </DropdownMenuItem>
+              </Link>
+           
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
               <Link method="post" className=" w-full" href={route('logout')} as="button" onClick={handleLogout}>

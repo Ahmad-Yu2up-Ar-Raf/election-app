@@ -1,0 +1,194 @@
+import * as React from "react"
+import {
+  IconCamera,
+  IconChartBar,
+  IconDashboard,
+  IconDatabase,
+  IconFileAi,
+  IconFileDescription,
+  IconFileWord,
+  IconFolder,
+  IconHelp,
+  IconInnerShadowTop,
+  IconListDetails,
+  IconReport,
+  IconSearch,
+  IconSettings,
+  IconUsers,
+} from "@tabler/icons-react"
+import { SharedData } from "@/types"
+import { NavDocuments } from "./nav-documents"
+import { NavMain } from "./nav-main"
+import { NavSecondary } from ".//nav-secondary"
+import { NavUser } from "./nav-user"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "./fragments/sidebar"
+import { Link, usePage } from "@inertiajs/react"
+import { useInitials } from "@/hooks/use-initials"
+import { Separator } from "./fragments/separator"
+
+const data = {
+  // user: {
+  //   name: "shadcn",
+  //   email: "m@example.com",
+  //   avatar: "/avatars/shadcn.jpg",
+  // },
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "/dashboard/calon",
+      icon: IconDashboard,
+    },
+    // {
+    //   title: "Lifecycle",
+    //   url: "#",
+    //   icon: IconListDetails,
+    // },
+    // {
+    //   title: "Analytics",
+    //   url: "#",
+    //   icon: IconChartBar,
+    // },
+    // {
+    //   title: "Projects",
+    //   url: "#",
+    //   icon: IconFolder,
+    // },
+    // {
+    //   title: "Team",
+    //   url: "#",
+    //   icon: IconUsers,
+    // },
+  ],
+  // navClouds: [
+  //   {
+  //     title: "Capture",
+  //     icon: IconCamera,
+  //     isActive: true,
+  //     url: "#",
+  //     items: [
+  //       {
+  //         title: "Active Proposals",
+  //         url: "#",
+  //       },
+  //       {
+  //         title: "Archived",
+  //         url: "#",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Proposal",
+  //     icon: IconFileDescription,
+  //     url: "#",
+  //     items: [
+  //       {
+  //         title: "Active Proposals",
+  //         url: "#",
+  //       },
+  //       {
+  //         title: "Archived",
+  //         url: "#",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Prompts",
+  //     icon: IconFileAi,
+  //     url: "#",
+  //     items: [
+  //       {
+  //         title: "Active Proposals",
+  //         url: "#",
+  //       },
+  //       {
+  //         title: "Archived",
+  //         url: "#",
+  //       },
+  //     ],
+  //   },
+  // ],
+  navSecondary: [
+    {
+      title: "Settings",
+      url: "/settings/profile",
+      icon: IconSettings,
+    },
+    // {
+    //   title: "Get Help",
+    //   url: "#",
+    //   icon: IconHelp,
+    // },
+    // {
+    //   title: "Search",
+    //   url: "#",
+    //   icon: IconSearch,
+    // },
+  ],
+  // documents: [
+  //   {
+  //     name: "Data Library",
+  //     url: "#",
+  //     icon: IconDatabase,
+  //   },
+  //   {
+  //     name: "Reports",
+  //     url: "#",
+  //     icon: IconReport,
+  //   },
+  //   {
+  //     name: "Word Assistant",
+  //     url: "#",
+  //     icon: IconFileWord,
+  //   },
+  // ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+     const page = usePage<SharedData>();
+    const { auth } = page.props;
+
+
+  return (
+    <Sidebar collapsible="offcanvas" {...props}>
+      <SidebarHeader className="flex flex-col gap-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+            asChild 
+              className="data-[slot=sidebar-menu-button]:!p-1.5 space-x-1"
+            >
+      
+            <Link href="/dashboard/calon" className="flex h-9 w-9 items-center justify-center">
+                   <div   className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
+                 <IconInnerShadowTop className="size-5 text-accent" />
+            </div>
+            <div className="ml-1 grid flex-1 text-left text-sm">
+                 
+                <span className="text-base font-semibold">Acme Inc.</span>
+            </div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      {/* <Separator /> */}
+      </SidebarHeader>
+      <SidebarContent>
+        
+        <NavMain items={data.navMain} />
+        {/* <NavDocuments items={data.documents} /> */}
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={auth} />
+      </SidebarFooter>
+    </Sidebar>
+  )
+}

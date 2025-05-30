@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/fragments/select";
 import { Textarea } from "@/components/ui/fragments/textarea";
-import PictureImageInput from "@/components/file-uploud";
+import PictureImageInput from "@/components/ui/core/file-uploud";
 import { cn } from "@/lib/utils";
 
 
@@ -158,27 +158,7 @@ const gender: string[] = [
             <section className="space-y-10">
         
 
-              {/* <FormField
-                disabled={isPending}
-                control={form.control}
-                   defaultValue={currentEmployee?.location || undefined as any }
-                name={"location" as FieldPath<T>}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={cn(isPending && "text-muted-foreground")}>Location</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Mess located"
-                        className="resize-none"
-               
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription className=" sr-only">You can add your mess location</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
+      
 
 
               <FormField
@@ -292,40 +272,7 @@ const gender: string[] = [
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                disabled={isPending}
-                control={form.control}
-                  defaultValue={currentEmployee?.capacity_status || undefined as any}
-                name={"capacity_status" as FieldPath<T>}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={cn(isPending && "text-muted-foreground")}>Status Capacity</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger disabled={isPending} className="capitalize">
-                          <SelectValue placeholder="Select a mess type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectGroup>
-                          {mess.statusCapacity.enumValues.map((item) => (
-                            <SelectItem
-                              key={item}
-                              value={item}
-                              className="capitalize"
-                            >
-                              {item}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription className=" sr-only">The default value will be available</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-
+       
       
             </section>
           </section>
