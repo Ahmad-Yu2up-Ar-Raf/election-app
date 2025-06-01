@@ -33,8 +33,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/fragments/drawer";
 import { router } from "@inertiajs/react";
+import { Elections } from "@/lib/schema";
 
-export function CreateTaskSheet() {
+export function CreateTaskSheet({ elections }: { elections: Elections[] }) {
   const [open, setOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
   const [loading, setLoading] = React.useState(false);  
@@ -47,7 +48,7 @@ export function CreateTaskSheet() {
 
 
   const form  =   useForm<CalonSchemaForm>({
-    mode: "onChange",
+    mode: "onSubmit", 
     defaultValues: {
        nama: "",
         kelas: "",
@@ -72,6 +73,7 @@ function onSubmit(input: CalonSchemaForm) {
     formData.append('kelas', input.kelas);
     formData.append('gender', input.gender || "male");
     formData.append('status', input.status || "active");
+    formData.append('election_id', input.election_id ? input.election_id.toString() : "");
     
     if (input.visi) {
       formData.append('visi', input.visi);
@@ -118,7 +120,8 @@ function onSubmit(input: CalonSchemaForm) {
         if (!isDesktop) {
   return (
     <Sheet open={open} onOpenChange={setOpen} modal={true} >
-      <SheetTrigger asChild>
+ 
+      <SheetTrigger asChild  >
         <Button variant="outline" className=" text-sm  bg-background" size="sm">
           <Plus  className=" mr-3 "/>
           Add New 
@@ -126,12 +129,12 @@ function onSubmit(input: CalonSchemaForm) {
       </SheetTrigger>
       <SheetContent className="flex flex-col gap-6 overflow-y-scroll ">
         <SheetHeader className="text-left sm:px-6 space-y-1 bg-background z-30  sticky top-0   p-4 border-b  ">
-          <SheetTitle className=" text-lg">Add New <Button type="button"   variant={"outline"} className=" ml-2  px-2.5 text-base capitalize">Calon</Button> </SheetTitle>
+          <SheetTitle className=" text-lg">Add New <Button type="button"   variant={"outline"} className=" ml-2  px-2.5 text-base capitalize">Candidate</Button> </SheetTitle>
           <SheetDescription className=" sr-only">
             Fill in the details below to create a new task
           </SheetDescription>
         </SheetHeader>
-        <CalonForm isPending={loading} form={form}  onSubmit={onSubmit}>
+        <CalonForm elections={elections} isPending={loading} form={form}  onSubmit={onSubmit}>
           <SheetFooter className="gap-3 px-3 py-4 w-full flex-row justify-end  flex  border-t sm:space-x-0">
             
 
@@ -141,7 +144,7 @@ function onSubmit(input: CalonSchemaForm) {
                 Cancel
               </Button>
             </SheetClose>
-            <Button disabled={loading} className="w-fit dark:bg-primary  dark:text-primary-foreground  bg-primary text-primary-foreground " size={"sm"}>
+            <Button disabled={loading} type="submit" className="w-fit dark:bg-primary !pointer-events-auto  dark:text-primary-foreground  bg-primary text-primary-foreground " size={"sm"}>
               {loading && <Loader className="animate-spin" />}
               Add
             </Button>
@@ -154,8 +157,10 @@ function onSubmit(input: CalonSchemaForm) {
 }
 
 
+  
+
 return(
-     <Drawer open={open} onOpenChange={setOpen} modal={true} >
+     <Drawer open={open} onOpenChange={setOpen} modal={true}  >
    <DrawerTrigger asChild>
         <Button variant="outline" className=" bg-background" size="sm">
           <Plus  className=""/>
@@ -164,7 +169,7 @@ return(
       </DrawerTrigger>
       <DrawerContent className="flex flex-col  ">
         <DrawerHeader className="text-left sm:px-6 space-y-1 bg-background    p-4 border-b  ">
-        <DrawerTitle className=" text-xl">Add New <Button type="button"   variant={"outline"} className=" ml-2  px-2.5 text-base">Mess</Button> </DrawerTitle>
+        <DrawerTitle className=" text-xl">Add New <Button type="button"   variant={"outline"} className=" ml-2  px-2.5 text-base">Candidate</Button> </DrawerTitle>
 
         
               <DrawerDescription className=" text-sm">
@@ -174,7 +179,7 @@ return(
         </DrawerHeader>
 
 
-         <CalonForm  isPending={loading} form={form}  onSubmit={onSubmit}>
+         <CalonForm  elections={elections}  isPending={loading} form={form}  onSubmit={onSubmit}>
 
         <DrawerFooter className="gap-3 px-3 py-4 w-full flex-row justify-end  flex  border-t sm:space-x-0">
              <DrawerClose disabled={loading} asChild onClick={() => form.reset()}>
@@ -183,7 +188,7 @@ return(
                               Cancel
                             </Button>
                           </DrawerClose>
-                          <Button  disabled={loading} className="w-fit dark:bg-primary  dark:text-primary-foreground  bg-primary text-primary-foreground " size={"sm"}>
+                          <Button type="submit"  disabled={loading} className="w-fit  !pointer-events-auto  dark:bg-primary  dark:text-primary-foreground  bg-primary text-primary-foreground " size={"sm"}>
                             {loading && <Loader className="animate-spin" />}
                             Add
                           </Button>

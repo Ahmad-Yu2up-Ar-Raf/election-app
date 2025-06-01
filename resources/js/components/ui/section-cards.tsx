@@ -1,5 +1,6 @@
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
-
+import Echo from 'laravel-echo';
+import { useEffect, useState } from 'react';
 import { Badge } from "@/components/ui/fragments/badge"
 import {
   Card,
@@ -9,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/fragments/card"
-import { CalonType, votes } from "@/lib/schema";
+import { CalonType, Elections, votes } from "@/lib/schema";
 import { LucideIcon, PersonStanding, UsersRound } from "lucide-react";
 
 
@@ -17,16 +18,15 @@ interface DataProps {
       calon?: CalonType[];
  
     votes?:votes[];
-  
+   elections?: Elections[];
 }
 
 
-export function SectionCards({ votes, calon } : DataProps) {
-
+export function SectionCards({  votes, calon, elections } : DataProps) {
 
  const Votes_count = votes?.length || 0;
   const Calon_count = calon?.length || 0;
-
+   const Elections_count = calon?.length || 0;
 
 
 
@@ -41,22 +41,30 @@ interface DataCard {
 
 
 
-const dataCards: DataCard[] = [ 
- {
-  title: "Total Vote",
-  description: "Total votes casted in the election",
-  value: Votes_count,
-  icon:  PersonStanding,
-  label: "Voters"
- },
- {
-  title: "Total Calon",
-  description: "Total candidates running in the election",
-  value: Calon_count,
-  icon: UsersRound,
-  label: "Candidates"
- }
-]
+
+  const dataCards: DataCard[] = [ 
+    {
+      title: "Total Vote",
+      description: "Total votes casted in the election",
+      value: Votes_count,
+      icon: PersonStanding,
+      label: "Voters"
+    },
+    {
+      title: "Total Candidates",
+      description: "Total candidates running in the election", 
+      value: Calon_count,
+      icon: UsersRound,
+      label: "Candidates"
+    },
+    {
+      title: "Total Elections",
+      description: "Total elections conducted",
+      value: elections?.length || 0,
+      icon: IconTrendingUp,
+      label: "Elections"
+    }
+  ];
 
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">

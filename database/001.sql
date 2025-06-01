@@ -1,0 +1,1 @@
+DELETE FROM `elections` WHERE `status` = 'active';

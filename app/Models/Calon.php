@@ -27,6 +27,7 @@ class Calon extends Model
         'picture',
         'status',
          'user_id',
+         'election_id'
     ];
 
 
@@ -55,5 +56,8 @@ class Calon extends Model
       return $this->hasMany(Vote::class, 'calon_id');
     }
  
-
+  public function elections(): BelongsTo
+    {
+      return $this->belongsTo(Election::class, 'election_id');
+    }
 }

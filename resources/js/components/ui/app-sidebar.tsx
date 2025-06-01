@@ -33,6 +33,7 @@ import {
 import { Link, usePage } from "@inertiajs/react"
 import { useInitials } from "@/hooks/use-initials"
 import { Separator } from "./fragments/separator"
+import AppLogoIcon from "./app-logo-icon"
 
 const data = {
   // user: {
@@ -45,6 +46,11 @@ const data = {
       title: "Dashboard",
       url: "/dashboard/calon",
       icon: IconDashboard,
+    },
+    {
+      title: "Elections",
+      url: "/dashboard/elections",
+      icon:  IconListDetails,
     },
     // {
     //   title: "Lifecycle",
@@ -168,11 +174,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       
             <Link href="/dashboard/calon" className="flex h-9 w-9 items-center justify-center">
                    <div   className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
-                 <IconInnerShadowTop className="size-5 text-accent" />
+                 <AppLogoIcon className="size-5 text-accent" />
             </div>
             <div className="ml-1 grid flex-1 text-left text-sm">
                  
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">Electioneering.</span>
             </div>
               </Link>
             </SidebarMenuButton>

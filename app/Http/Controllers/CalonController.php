@@ -33,6 +33,7 @@ class CalonController extends Controller
                 $query->orderBy('created_at', 'desc');
             }])
             ->withCount('votes')
+            ->with('elections')
             ->paginate($perPage);
 
         if (request()->has('filter') && request('filter') !== 'all') {
@@ -55,10 +56,29 @@ class CalonController extends Controller
         ->with('calon')
         ->orderBy('created_at', 'desc')
         ->get();
+
+
+
+
+        $elections = \App\Models\Election::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->with('candidates')
+            ->withCount('candidates')
+            ->paginate($perPage);
+
+        $elections->through(function($item) { 
+            return [
+                ...$item->toArray(),
+                'start_date' => $item->start_date ? $item->start_date->format('Y-m-d H:i:s') : null,
+                'end_date' => $item->end_date ? $item->end_date->format('Y-m-d H:i:s') : null,
+            ];
+        });
+
         
         return Inertia::render('dashboard/calon', [
             'calon' => $calon->items() ?? [],
             'votes' => $votes,
+            'elections' => $elections->items() ?? [],
             'filters' => [
                 'search' => request('search', ''),
                 'filter' => request('filter', 'all'),
@@ -97,6 +117,7 @@ class CalonController extends Controller
             'visi' => 'nullable|string|max:1000',
             'misi' => 'nullable|string|max:1000',
             'picture' => 'required|image|mimes:jpeg,png,jpg,svg,gif|max:2048',
+            'election_id' => 'required|exists:elections,id',
         ]);
 
         $picturePath = null;
@@ -155,6 +176,7 @@ class CalonController extends Controller
             'visi' => 'nullable|string|max:1000',
             'misi' => 'nullable|string|max:1000',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,svg,gif|max:2048',
+            'election_id' => 'required|exists:elections,id',
         ]);
 
         Log::info('Validated data:', $validated);
@@ -167,6 +189,7 @@ class CalonController extends Controller
             'kelas' => $validated['kelas'],
             'visi' => $validated['visi'] ?? '',
             'misi' => $validated['misi'] ?? '',
+            'election_id' => $validated['election_id'],
         ];
         
         // Handle picture upload jika ada file baru

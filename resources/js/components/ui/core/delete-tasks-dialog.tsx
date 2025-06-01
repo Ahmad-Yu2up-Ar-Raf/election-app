@@ -33,9 +33,15 @@ import { CalonType } from "@/lib/schema";
 import {  router, useForm } from "@inertiajs/react";
 import React from "react";
 interface DeleteTasksDialogProps{
-  students: CalonType
+  students: any
   trigger?: boolean
-
+  // Optional controlled props
+  modal?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+   handledeDelete: (id: number) => void;
+  processing?: boolean;
+  // Controlled props
    open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -44,6 +50,8 @@ export function DeleteTasksDialog({
    students,
  trigger = true,
  open,
+ processing = false,
+ handledeDelete,
  onOpenChange,
   ...props
 }: DeleteTasksDialogProps) {
@@ -54,31 +62,6 @@ export function DeleteTasksDialog({
   const isOpen = onOpenChange ? open : internalOpen;
   const setIsOpen = onOpenChange || setInternalOpen;
   const isDesktop = useIsMobile;
-
-  const [processing, setProcessing] = React.useState(false);
-  const handleDelete = (taskId: number) => {
-      try {
-        setProcessing(true);
-        router.delete(route('dashboard.calon.destroy', { calon: taskId }), {
-          preserveScroll: true,
-          preserveState: true,
-          onSuccess: () => {
-            toast.success("Calon deleted successfully");
-            setIsOpen(false);
-          },
-          onError: (errors) => {
-            console.error("Delete error", errors);
-            toast.error("Failed to delete the calon. Please try again.");
-          },
-          onFinish: () => {
-            setProcessing(false);
-          }
-        });
-      } catch (error) {
-        console.error("Delete error", error);
-        toast.error("Failed to delete the calon. Please try again.");
-      }
-    };
 
 
 
@@ -114,7 +97,7 @@ export function DeleteTasksDialog({
           <Button
             aria-label="Delete selected rows"
             variant="destructive"
-           onClick={() => handleDelete(students.id)}
+           onClick={() => handledeDelete(students.id)}
             disabled={processing}
           >
             {processing && (
@@ -153,7 +136,7 @@ export function DeleteTasksDialog({
             <Button
               aria-label="Delete selected rows"
               variant="destructive"
-               onClick={() => handleDelete(students.id)}
+             onClick={() => handledeDelete(students.id)}
               disabled={processing}
             >
               {processing && (

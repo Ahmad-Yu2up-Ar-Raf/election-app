@@ -105,7 +105,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/fragments/tabs"
 import { CreateTaskSheet } from "./core/create-calon-sheet"
-import { CalonType } from "@/lib/schema"
+import { CalonType, Elections } from "@/lib/schema"
 
 import { Mars, Venus } from "lucide-react"
 import { DeleteTasksDialog } from "./core/delete-tasks-dialog"
@@ -114,6 +114,7 @@ import { AvatarImage,  Avatar, AvatarFallback } from "./fragments/avatar"
 import { useInitials } from "@/hooks/use-initials"
 import { UpdateTaskSheet } from "./core/calon-update-sheet"
 import { router } from "@inertiajs/react"
+import { toast } from "sonner"
 export const schema = z.object({
   id: z.number(),
   header: z.string(),
@@ -153,7 +154,7 @@ const columns: ColumnDef<CalonType>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center  w-14 justify-center">
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
@@ -176,15 +177,16 @@ const columns: ColumnDef<CalonType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+  
   {
     accessorKey: "nama",
     header: "nama",
     cell: ({ row }) => {
           const getInitials = useInitials();
       return  (
-        <div className="flex items-center gap-4  ">
+        <div className="flex items-center w-45 gap-4  ">
         
-           <Avatar className="  relative flex size-8 shrink-0 overflow-hidden rounded-full">
+           <Avatar className="  relative flex size-10 shrink-0 overflow-hidden rounded-full">
                                         <AvatarImage src={row.original.picture} alt={row.original.nama} />
                                         <AvatarFallback className="rounded-lg  bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                             {getInitials(row.original.nama)}
@@ -202,7 +204,18 @@ const columns: ColumnDef<CalonType>[] = [
     },
     enableHiding: false,
   },
-  
+      {
+    accessorKey: "Election",
+    header: "Election",
+    cell: ({ row }) => (
+      <div className="w-50">
+    
+        {row.original.elections?.title}
+     
+      </div>
+    ),
+  },
+
     {
     accessorKey: "voters",
     header: "voters",
@@ -247,6 +260,8 @@ const columns: ColumnDef<CalonType>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
+       <div className=" w-32">
+
       <Badge variant="outline" className="text-muted-foreground px-1.5">
         {row.original.status === "active" ? (
           <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
@@ -255,13 +270,14 @@ const columns: ColumnDef<CalonType>[] = [
         )}
         {row.original.status}
       </Badge>
+       </div>
     ),
   },
     {
     accessorKey: "Created At",
     header: "Created At",
     cell: ({ row }) => (
-      <div className="w-32">
+      <div className="w-20">
     
         {row.original.created_at ? new Date(row.original.created_at).toLocaleDateString() : "N/A"}
      
@@ -270,46 +286,75 @@ const columns: ColumnDef<CalonType>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-
-
+    cell: ({ row, table }) => {
       const [open, setOpen] = React.useState(false)
-  const [openUpdate, setOpenUpdate] = React.useState(false)
-  const [openModal, setOpenModal] = React.useState(false)
+      const [openUpdate, setOpenUpdate] = React.useState(false)
+      const [openModal, setOpenModal] = React.useState(false)
+      const elections = (table.options.meta as TableMeta)?.elections || []
 
 
-  return (
-      <>
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-            size="icon"
-          >
-            <IconDotsVertical />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem
-          
-            onSelect={() =>  setOpenUpdate(true)}
-          
-          >Edit</DropdownMenuItem>
-          {/* <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem> */}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" 
-          
-           onSelect={() =>  setOpenModal(true)}
-          > Delete</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <UpdateTaskSheet task={row.original} open={openUpdate} onOpenChange={setOpenUpdate}/>
-           <DeleteTasksDialog trigger={false}   students={row.original} open={openModal} onOpenChange={setOpenModal}/>
-      </>
-  )
+  const [processing, setProcessing] = React.useState(false);
+  const handleDelete = (taskId: number) => {
+      try {
+        setProcessing(true);
+        router.delete(route('dashboard.calon.destroy', { calon: taskId }), {
+          preserveScroll: true,
+          preserveState: true,
+          onSuccess: () => {
+            toast.success("Calon deleted successfully");
+            setOpenModal(false);
+          },
+          onError: (errors) => {
+            console.error("Delete error", errors);
+            toast.error("Failed to delete the calon. Please try again.");
+          },
+          onFinish: () => {
+            setProcessing(false);
+          }
+        });
+      } catch (error) {
+        console.error("Delete error", error);
+        toast.error("Failed to delete the calon. Please try again.");
+      }
+    };
+
+
+
+      return (
+        <>
+          <DropdownMenu >
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+                size="icon"
+              >
+                <IconDotsVertical />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-32">
+              <DropdownMenuItem onSelect={() => setOpenUpdate(true)}>Edit</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive" onSelect={() => setOpenModal(true)}>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <UpdateTaskSheet 
+            elections={elections}
+            task={row.original} 
+            open={openUpdate} 
+            onOpenChange={setOpenUpdate}
+          />
+          <DeleteTasksDialog 
+          handledeDelete={handleDelete}
+            processing={processing}
+            trigger={false} 
+            students={row.original} 
+            open={openModal} 
+            onOpenChange={setOpenModal}
+          />
+        </>
+      )
     },
   },
 ]
@@ -342,22 +387,29 @@ function DraggableRow({ row }: { row: Row<CalonType> }) {
 
 interface DataTableProps { 
     data: CalonType[];
-  pagination: {
-    currentPage: number;
-    lastPage: number;
-    perPage: number;
-    total: number;
-  };
-     filters: {
+    pagination: {
+        currentPage: number;
+        lastPage: number;
+        perPage: number;
+        total: number;
+    };
+    filters: {
         search: string;
         filter: string;
     };
+    elections: Elections[];
+}
+
+// Add table meta type
+type TableMeta = {
+    elections: Elections[];
 }
 
 export function DataTable({
   data: initialData,
   pagination: serverPagination,
-  filters 
+  filters ,
+  elections 
 }: DataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [searchTerm, setSearchTerm] = React.useState(filters.search);
@@ -406,6 +458,9 @@ export function DataTable({
       rowSelection,
       columnFilters,
       pagination,
+    },
+    meta: {
+      elections // Pass elections to table meta
     },
     pageCount: serverPagination.lastPage,
     manualPagination: true, // Enable manual pagination
@@ -496,10 +551,10 @@ export function DataTable({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="  space-x-2" size="sm">
-                <IconLayoutColumns  className=" size-5"/>
+                <IconLayoutColumns  className="hidden md:inline-flex  size-5"/>
                 <span className="hidden lg:inline">Customize Columns</span>
-                <span className="lg:hidden ">Columns</span>
-                <IconChevronDown   className=" size-5"/>
+                <span className=" hidden md:inline-flex  lg:hidden ">Columns</span>
+                <IconChevronDown   className="  size-5"/>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
@@ -526,7 +581,7 @@ export function DataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-     <CreateTaskSheet/>
+     <CreateTaskSheet elections={elections}/>
         </div>
       </div>
   

@@ -5,12 +5,16 @@ import { type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
-
+import { AppSidebar } from "@/components/ui/app-sidebar"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/fragments/sidebar"
+import { SiteHeader } from "@/components/ui/site-header"
 import HeadingSmall from '@/components/ui/heading-small';
 import { Button } from '@/components/ui/fragments/button';
 import { Input } from '@/components/ui/fragments/input';
 import { Label } from '@/components/ui/fragments/label';
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Password settings',
@@ -49,7 +53,18 @@ export default function Password() {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+     <SidebarProvider
+                  style={
+                    {
+                      "--sidebar-width": "calc(var(--spacing) * 72)",
+                      "--header-height": "calc(var(--spacing) * 12)",
+                    } as React.CSSProperties
+                  }
+                >
+                  <AppSidebar variant="inset" />
+                  <SidebarInset>
+                    <SiteHeader siteName='Password' />
+                   
             <Head title="Profile settings" />
 
             <SettingsLayout>
@@ -123,6 +138,7 @@ export default function Password() {
                     </form>
                 </div>
             </SettingsLayout>
-        </AppLayout>
+ </SidebarInset>
+            </SidebarProvider>
     );
 }

@@ -29,15 +29,16 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/fragments/drawer";
-import { CalonType } from "@/lib/schema";
+import { CalonType, Elections } from "@/lib/schema";
 import { router } from "@inertiajs/react";
 
 interface UpdateTaskSheetProps
   extends React.ComponentPropsWithRef<typeof Sheet> {
   task: CalonType | null;
+  elections: Elections[]
 }
 
-export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
+export function UpdateTaskSheet({ task, elections, ...props }: UpdateTaskSheetProps) {
   const [isPending, startTransition] = React.useTransition();
   const [loading, setLoading] = React.useState(false);
   
@@ -90,6 +91,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
       formData.append('status', input.status || 'active');
       formData.append('visi', input.visi || '');
       formData.append('misi', input.misi || '');
+       formData.append('election_id', input.election_id ? input.election_id.toString() : "");
       formData.append('_method', 'PUT'); // Laravel method spoofing
       
       // Handle picture - hanya append jika ada file baru
@@ -175,6 +177,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
             onSubmit={onSubmit} 
             isPending={loading} 
             currentEmployee={task!}
+            elections={elections}
           >
             <SheetFooter className="gap-3 px-3 py-4 w-full flex-row justify-end flex border-t sm:space-x-0">
               <SheetClose disabled={loading} asChild onClick={() => form.reset()}>
@@ -210,6 +213,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
         </DrawerHeader>
         <CalonForm<CalonUpdateSchema> 
           form={form} 
+             elections={elections}
           onSubmit={onSubmit} 
           isPending={loading} 
           currentEmployee={task!} 

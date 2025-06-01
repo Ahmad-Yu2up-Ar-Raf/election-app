@@ -130,7 +130,7 @@ function SidebarProvider({
   return (
     <SidebarContext.Provider value={contextValue}>
       <TooltipProvider delayDuration={0}>
-         <Toaster/>
+
         <div
           data-slot="sidebar-wrapper"
           style={

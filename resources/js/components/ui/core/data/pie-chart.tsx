@@ -62,9 +62,9 @@ export default function PieChart({ calon }: PieChartProps) {
   const trendPercentage = totalVotes > 0 ? ((totalVotes / 100) * 5.2).toFixed(1) : "0";
 
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+  
       
-      {/* Pie Chart */}
+   
       <Card className="flex flex-col">
         <CardHeader className="items-center pb-0">
           <CardTitle>Vote Distribution</CardTitle>
@@ -102,60 +102,7 @@ export default function PieChart({ calon }: PieChartProps) {
         </CardFooter>
       </Card>
 
-      {/* Bar Chart */}
-      <Card className="flex flex-col justify-between">
-        <CardHeader>
-          <CardTitle>Vote Ranking</CardTitle>
-          <CardDescription>Votes comparison by candidate</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {totalVotes > 0 ? (
-            <ChartContainer 
-              className="mx-auto max-h-[230px]"
-              config={barChartConfig}
-            >
-              <BarChart
-                accessibilityLayer
-                data={barChartData}
-                layout="vertical"
-                margin={{
-                  left: 0,
-                }}
-              >
-                <YAxis
-                  dataKey="name"
-                  type="category"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => {
-                    // Truncate long names
-                    return value.length > 15 ? `${value.substring(0, 15)}...` : value;
-                  }}
-                />
-                <XAxis dataKey="votes" type="number" hide />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Bar dataKey="votes" layout="vertical" radius={5} />
-              </BarChart>
-            </ChartContainer>
-          ) : (
-            <div className="flex items-center justify-center h-[230px]">
-              <p className="text-muted-foreground">No votes recorded yet</p>
-            </div>
-          )}
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 font-medium leading-none">
-            Active candidates: {calon.filter(c => c.status === 'approved').length} <TrendingUp className="h-4 w-4" />
-          </div>
-          <div className="leading-none text-muted-foreground">
-            Showing vote count for all candidates
-          </div>
-        </CardFooter>
-      </Card>
-    </div>
+     
+
   )
 }

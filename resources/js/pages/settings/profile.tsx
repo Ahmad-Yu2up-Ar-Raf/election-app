@@ -2,16 +2,20 @@ import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
-
+import { AppSidebar } from "@/components/ui/app-sidebar"
 import DeleteUser from '@/components/ui/delete-user';
 import HeadingSmall from '@/components/ui/heading-small';
 import InputError from '@/components/ui/input-error';
 import { Button } from '@/components/ui/fragments/button';
 import { Input } from '@/components/ui/fragments/input';
 import { Label } from '@/components/ui/fragments/label';
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
 
+import SettingsLayout from '@/layouts/settings/layout';
+import { SiteHeader } from "@/components/ui/site-header"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/fragments/sidebar"
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Profile settings',
@@ -41,7 +45,21 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+
+        <SidebarProvider
+              style={
+                {
+                  "--sidebar-width": "calc(var(--spacing) * 72)",
+                  "--header-height": "calc(var(--spacing) * 12)",
+                } as React.CSSProperties
+              }
+            >
+              <AppSidebar variant="inset" />
+              <SidebarInset>
+                <SiteHeader siteName='Profile' />
+               
+            
+     
             <Head title="Profile settings" />
 
             <SettingsLayout>
@@ -122,6 +140,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                 <DeleteUser />
             </SettingsLayout>
-        </AppLayout>
+ </SidebarInset>
+            </SidebarProvider>
     );
 }
