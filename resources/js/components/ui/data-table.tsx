@@ -226,6 +226,8 @@ const columns: ColumnDef<CalonType>[] = [
      
       </div>
     ),
+        enableSorting: true,
+    enableHiding: true,
   },
     {
     accessorKey: "Class",
@@ -297,7 +299,7 @@ const columns: ColumnDef<CalonType>[] = [
   const handleDelete = (taskId: number) => {
       try {
         setProcessing(true);
-        router.delete(route('dashboard.calon.destroy', { calon: taskId }), {
+        router.delete(route('dashboard.admind.destroy', { admind: taskId }), {
           preserveScroll: true,
           preserveState: true,
           onSuccess: () => {
@@ -420,7 +422,7 @@ export function DataTable({
     () =>
       debounce((search: string) => {
         router.get(
-          route('dashboard.calon.index'),
+          route('dashboard.admind.index'),
           { search, filter: completionFilter },
           { preserveState: true, preserveScroll: true }
         );
@@ -475,7 +477,7 @@ export function DataTable({
       setPagination(newPagination);
       
       router.get(
-        route('dashboard.calon.index'),
+        route('dashboard.admind.index'),
         { page: newPagination.pageIndex + 1 },
         { 
           preserveState: true,
@@ -511,7 +513,7 @@ export function DataTable({
     
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        router.get(route('dashboard.calon.index'), {
+        router.get(route('dashboard.admind.index'), {
             search: searchTerm,
             filter: completionFilter,
         }, {
@@ -654,7 +656,7 @@ export function DataTable({
                   const newSize = Number(value);
                   setPagination(prev => ({ ...prev, pageSize: newSize }));
                   router.get(
-                    route('dashboard.calon.index'),
+                    route('dashboard.admind.index'),
                     { 
                       perPage: newSize,
                       page: 1 // Reset to first page when changing page size

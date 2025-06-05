@@ -46,6 +46,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return to_route('dashboard.calon.index');
+        return to_route('dashboard.admind.index');
     }
 }

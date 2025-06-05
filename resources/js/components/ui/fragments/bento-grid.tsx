@@ -95,7 +95,7 @@ function BentoGrid({ items }: BentoGridProps) {
   const transformedItems = useMemo(() => {
         return items.map((item, index) => {
             const iconIndex = Math.abs(index) % ICONS.length;
-            const hasLargeVoters = (item.voters_count || 0) >= 10;
+            const hasLargeVoters = (item.status || "finished") == "finished";
             
             return {
                 ...item,
@@ -118,8 +118,9 @@ function BentoGrid({ items }: BentoGridProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 max-w-7xl mx-auto">
             {transformedItems.map((item, index) => {
-           
+                 const isMore = item.candidates_count! >= 2
                 const isGanjil = index % 2 !== 0;
+                if(isMore)
                 return(
                 <BlurFade 
                 

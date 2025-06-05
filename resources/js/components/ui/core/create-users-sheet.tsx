@@ -17,10 +17,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/fragments/sheet";
-import { TaskForm as CalonForm } from "./calon-form";
+import { TaskForm as CalonForm } from "./user-form";
 
-import { calonSchemaForm } from "@/lib/validations";
-import type { CalonSchemaForm } from "@/lib/validations";
+import { calonSchemaForm, userCreateSchema } from "@/lib/validations";
+import type { CalonSchemaForm, UserCreateSchema, UsersSchemaForm } from "@/lib/validations";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Drawer,
@@ -33,9 +33,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/fragments/drawer";
 import { router } from "@inertiajs/react";
-import { Elections } from "@/lib/schema";
 
-export function CreateTaskSheet({ elections }: { elections: Elections[] }) {
+
+export function CreateTaskSheet() {
   const [open, setOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
   const [loading, setLoading] = React.useState(false);  
@@ -50,14 +50,16 @@ export function CreateTaskSheet({ elections }: { elections: Elections[] }) {
           const pathNames = currentPath.split('/').filter(path => path)[1]
  
 
-  const form  =   useForm<CalonSchemaForm>({
+  const form  =   useForm<UserCreateSchema>({
     mode: "onSubmit", 
     defaultValues: {
-       nama: "",
-        kelas: "",
-        status: "active"
+       name: "",
+        email: "",
+        password: "",
+       password_confirmation: "",
+        role: "admind"
       },
-    resolver: zodResolver(calonSchemaForm),
+    resolver: zodResolver(userCreateSchema),
   }) 
 
 
@@ -65,7 +67,7 @@ export function CreateTaskSheet({ elections }: { elections: Elections[] }) {
 
   
 
-function onSubmit(input: CalonSchemaForm) {
+function onSubmit(input:  UserCreateSchema) {
   startTransition(async () => {
     setLoading(true);
     
@@ -73,32 +75,15 @@ function onSubmit(input: CalonSchemaForm) {
     const formData = new FormData();
     
     // Append semua field
-    formData.append('nama', input.nama);
-    formData.append('kelas', input.kelas);
-    formData.append('gender', input.gender!);
-    formData.append('status', input.status!);
-    formData.append('election_id', input.election_id ? input.election_id.toString() : "");
-    
-    if (input.visi) {
-      formData.append('visi', input.visi);
-    }
-    
-    if (input.misi) {
-      formData.append('misi', input.misi);
-    }
+    formData.append('name', input.name);
+    formData.append('email', input.email);
+    formData.append('role', input.role!);
+    formData.append('password', input.password!);
+    formData.append('password_confirmation', input.password_confirmation!);
+
  
-    // Handle picture - jika File object, append ke FormData
-    // Jika string (existing path), append sebagai hidden field
-    if (input.picture) {
-      if (input.picture instanceof File) {
-        formData.append('picture', input.picture);
-      } else {
-        // Untuk existing image path, bisa skip atau kirim sebagai string
-        formData.append('existing_picture', input.picture);
-      }
-    }
     
-    router.post(route(`dashboard.${pathNames}.store`), formData, { 
+    router.post(route(`dashboard.users.store`), formData, { 
       preserveScroll: true,
       preserveState: true,
       forceFormData: true, // Penting untuk file upload
@@ -133,12 +118,12 @@ function onSubmit(input: CalonSchemaForm) {
       </SheetTrigger>
       <SheetContent className="flex flex-col gap-6 overflow-y-scroll ">
         <SheetHeader className="text-left sm:px-6 space-y-1 bg-background z-30  sticky top-0   p-4 border-b  ">
-          <SheetTitle className=" text-lg">Add New <Button type="button"   variant={"outline"} className=" ml-2  px-2.5 text-base capitalize">Candidate</Button> </SheetTitle>
+          <SheetTitle className=" text-lg">Add New <Button type="button"   variant={"outline"} className=" ml-2  px-2.5 text-base capitalize">CUsers</Button> </SheetTitle>
           <SheetDescription className=" sr-only">
             Fill in the details below to create a new task
           </SheetDescription>
         </SheetHeader>
-        <CalonForm elections={elections} isPending={loading} form={form}  onSubmit={onSubmit}>
+        <CalonForm  isPending={loading} form={form}  onSubmit={onSubmit}>
           <SheetFooter className="gap-3 px-3 py-4 w-full flex-row justify-end  flex  border-t sm:space-x-0">
             
 
@@ -183,7 +168,7 @@ return(
         </DrawerHeader>
 
 
-         <CalonForm  elections={elections}  isPending={loading} form={form}  onSubmit={onSubmit}>
+         <CalonForm  isPending={loading} form={form}  onSubmit={onSubmit}>
 
         <DrawerFooter className="gap-3 px-3 py-4 w-full flex-row justify-end  flex  border-t sm:space-x-0">
              <DrawerClose disabled={loading} asChild onClick={() => form.reset()}>

@@ -54,7 +54,7 @@ mode: "onSubmit",
     capacity: 0,
     start_date: new Date(),
     end_date: new Date(), // Tambahkan ini
-    status: "upcoming",     // Tambahkan ini
+    // status: "upcoming",     // Tambahkan ini
     description: "",      // Tambahkan ini
 
    
@@ -77,7 +77,7 @@ function onSubmit(input: Elections) {
     formData.append('capacity', input.capacity.toString());
     formData.append('start_date', input.start_date.toISOString());
     formData.append('end_date', input.end_date.toISOString());
-    formData.append('status', input.status || "active");
+    // formData.append('status', input.status || "active");
     
     if (input.description) {
       formData.append('description', input.description);

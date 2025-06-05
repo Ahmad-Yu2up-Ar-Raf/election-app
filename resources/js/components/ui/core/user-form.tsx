@@ -32,6 +32,8 @@ import { Check, Loader2, Plus } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/fragments/command";
 import { Link, router } from "@inertiajs/react";
 import { toast } from "sonner";
+import { PasswordInput } from "../fragments/password-input";
+import { User } from "@/types";
 
 
 interface TaskFormProps<T extends FieldValues>
@@ -40,40 +42,28 @@ interface TaskFormProps<T extends FieldValues>
   form: UseFormReturn<T>;
   onSubmit: (data: T) => void;
   isPending: boolean;
-  currentEmployee?: CalonType;
-  elections?: Elections[];
+  currentEmployee?: User;
+  isUpdated?: boolean
 }
 
 export function TaskForm<T extends FieldValues>({
   form,
   onSubmit,
-  elections,
+  isUpdated = false,
   children,
   currentEmployee,
   isPending,
 }: TaskFormProps<T>) {
 
 
-   console.log("Current Employee:", elections);
-
-
-const status: string[] = [
-    'active',
-    "inactive" , 
-    "pending" , 
-    "disqualified",
-    "rejected", 
-    "approved", "suspended" , "qualified"
-]
-
 
 const gender: string[] = [ 
-    "male",
-    "female"
+    "admind",
+    "user"
 ]
 
 
-console.log(elections)
+
 
   return (
     <Form {...form}>
@@ -82,166 +72,86 @@ console.log(elections)
         className="flex overflow-y-scroll pt-6 md:pt-0 md:overflow-y-visible flex-col gap-4 px-0"
       >
         <main className="space-y-6 mb-6">
-          <section className="space-y-10 border-b pb-8 pt-2 px-4 sm:px-6">
+          <section className="space-y-10  pb-8 pt-2 px-4 sm:px-6">
 
 
             
             <FormField
               control={form.control}
-              name={"nama" as FieldPath<T>}
+              name={"name" as FieldPath<T>}
+              defaultValue={currentEmployee?.name as any}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className={cn(isPending && "text-muted-foreground")}>Name</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Employee name"
+                      placeholder="Admind name"
                       type="text"
                       disabled={isPending}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>Your osis calon full name.</FormDescription>
+                  <FormDescription>Your admind full name.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name={"kelas" as FieldPath<T>}
+              name={"email" as FieldPath<T>}
+                            defaultValue={currentEmployee?.email as any}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={cn(isPending && "text-muted-foreground")}>Kelas</FormLabel>
+                  <FormLabel className={cn(isPending && "text-muted-foreground")}>Email</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Student class"
-                      type="text"
+                      placeholder="Email admind"
+                      type="email"
                       disabled={isPending}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>Your osis calon class.</FormDescription>
+                  <FormDescription>Your admind email.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             
-               {elections && elections.length > 0 ? (
-                <FormField
-                   disabled={isPending }
-                   control={form.control}
-                  defaultValue={currentEmployee?.election_id as any}
-                   name={"election_id" as FieldPath<T>} // atau "bedId" sesuai dengan field di database
-                   render={({ field }) => (
-                     <FormItem className="flex flex-col">
-                       <FormLabel className={cn(isPending && "text-muted-foreground")}>Election</FormLabel>
-                       <Popover>
-                         <PopoverTrigger asChild >
-                           <FormControl>
-                             <Button
-                               variant="outline"
-                               role="combobox"
-                               disabled={isPending}
-                               className={cn(
-                                 "w-full justify-between",
-                                 !field.value && "text-muted-foreground"
-                               )}
-                             >
-                               { field.value ? (
-                                 elections.find(
-                                   (mess) => mess.id === field.value
-                                 )?.title || "Election not found"
-                               ) : (
-                                 "Select elections"
-                               )}
-                          
-                             </Button>
-                           </FormControl>
-                         </PopoverTrigger>
-                         <PopoverContent className="w-full p-0">
-                           <Command >
-                             <CommandInput placeholder="Search elections..." />
-                             <CommandList>
-                               <CommandEmpty>
-                                 { "No elections found."}
-                               </CommandEmpty>
-                               <CommandGroup>
-                                 {elections.map((elections) => (
-                                   <CommandItem
-                                     value={elections.title || `elections ${elections.id}`}
-                                     key={elections.id}
-                                     onSelect={() => {
-                                       form.setValue("election_id" as FieldPath<T>,  elections.id as any);
-                                     }}
-                                   >
-                                     <Check
-                                       className={cn(
-                                         "mr-2 h-4 w-4",
-                                         elections.id === field.value
-                                           ? "opacity-100"
-                                           : "opacity-0"
-                                       )}
-                                     />
-                                     {elections.title || `elections ${elections.id}`}
-                                   </CommandItem>
-                                 ))}
-                               </CommandGroup>
-                             </CommandList>
-                           </Command>
-                         </PopoverContent>
-                       </Popover>
-                       <FormDescription >
-                         { elections.length > 0  && "Select an available elections for the candidate." }
-                       </FormDescription>
-                       <FormMessage />
-                     </FormItem>
-                   )}
-                 />
-               ): (
-                       <FormField
-                control={form.control}
-                name={"election_id" as FieldPath<T>}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={cn(isPending && "text-muted-foreground")}>Elections</FormLabel>
-                    <Select 
-                      onValueChange={() => {
-                        toast.error("No elections available, please create an election first.");
-                        router.visit("/dashboard/elections");
-                      }} 
-                      value={field.value || ""}
-                      disabled={isPending}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="capitalize w-full">
-                          <SelectValue placeholder="Empty Running Elections" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent 
-                
-                      >
-                    
-                          <SelectItem
-                    
-                            key="no-elections"
-                            value={"no-elections"}
-                            className="capitalize relative w-full flex justify-between"
-                          
-                          >
-                           <span>Add New Elections</span>  <Plus className=" right-2 absolute" /> 
-                          </SelectItem>
-                        
-                       
-                      </SelectContent>
-                    </Select>
-                    <FormDescription >Select The elections</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               )}
-                
- 
+  {!isUpdated && (
+<>
+
 <FormField
+      control={form.control}
+       name={"password" as FieldPath<T>}
+            defaultValue={currentEmployee?.email as any}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Password</FormLabel>
+          <FormControl>
+            <PasswordInput placeholder="Password"  {...field} />
+          </FormControl>
+          <FormDescription>Enter your password.</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+<FormField
+      control={form.control}
+       name={"password_confirmation" as FieldPath<T>}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Password</FormLabel>
+          <FormControl>
+            <PasswordInput placeholder="password confirmation"  {...field} />
+          </FormControl>
+          <FormDescription>Enter your password again.</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+</>
+  )  }
+{/* <FormField
   disabled={isPending}
   control={form.control}
   name={"picture" as FieldPath<T>}
@@ -267,9 +177,9 @@ console.log(elections)
       <FormMessage />
     </FormItem>
   )}
-/>
+/> */}
 
-     <FormField
+     {/* <FormField
                 control={form.control}
                 name={"visi" as FieldPath<T>}
                 render={({ field }) => (
@@ -309,13 +219,13 @@ console.log(elections)
                 )}
               />
 
-
+    */}
      <FormField
                 control={form.control}
-                name={"gender" as FieldPath<T>}
+                name={"role" as FieldPath<T>}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={cn(isPending && "text-muted-foreground")}>Gender</FormLabel>
+                    <FormLabel className={cn(isPending && "text-muted-foreground")}>Role</FormLabel>
                     <Select 
                       onValueChange={field.onChange} 
                       value={field.value || ""}
@@ -323,7 +233,7 @@ console.log(elections)
                     >
                       <FormControl>
                         <SelectTrigger className="capitalize w-full">
-                          <SelectValue placeholder="Select Gender" />
+                          <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -338,15 +248,16 @@ console.log(elections)
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormDescription className="sr-only">Student gender</FormDescription>
+                    <FormDescription className="sr-only">User Role</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> 
+          
        
           </section>
           
-          <section className="space-y-10 px-4 sm:px-6">
+          {/* <section className="space-y-10 px-4 sm:px-6">
             <header>
               <h1 className="text-lg font-semibold">Optional Fields</h1>
               <p className="text-sm text-muted-foreground">These are columns that do not need any value</p>
@@ -402,7 +313,7 @@ console.log(elections)
          
       
             </section>
-          </section>
+          </section> */}
         </main>
        
         {children}

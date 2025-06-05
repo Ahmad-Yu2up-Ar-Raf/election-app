@@ -34,6 +34,7 @@ import { Link, usePage } from "@inertiajs/react"
 import { useInitials } from "@/hooks/use-initials"
 import { Separator } from "./fragments/separator"
 import AppLogoIcon from "./app-logo-icon"
+import { HardHat, Users2 } from "lucide-react"
 
 const data = {
   // user: {
@@ -44,13 +45,23 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard/calon",
+      url: "/dashboard/admind",
       icon: IconDashboard,
     },
     {
       title: "Elections",
       url: "/dashboard/elections",
       icon:  IconListDetails,
+    },
+    {
+      title: "Candidate",
+      url: "/dashboard/candidate",
+      icon:  Users2,
+    },
+    {
+      title: "Adminds",
+      url: "/dashboard/users",
+      icon:  HardHat,
     },
     // {
     //   title: "Lifecycle",
@@ -172,7 +183,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5 space-x-1"
             >
       
-            <Link href="/dashboard/calon" className="flex h-9 w-9 items-center justify-center">
+            <Link href="/dashboard/admind" className="flex h-9 w-9 items-center justify-center">
                    <div   className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
                  <AppLogoIcon className="size-5 text-accent" />
             </div>

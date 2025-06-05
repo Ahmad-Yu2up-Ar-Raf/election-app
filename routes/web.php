@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdmindController;
 use App\Http\Controllers\CalonController;
 use App\Http\Controllers\ElectionsController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoteController;
 // use App\Http\Controllers\VoteController;
 // use App\Models\Election;
@@ -14,10 +16,12 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
-        Route::resource('calon', CalonController::class);
+        Route::resource('admind', AdmindController::class);
         
         // Elections routes
         Route::resource('elections', ElectionsController::class);
+        Route::resource('candidate', CalonController::class);
+        Route::resource('users', UserController::class);
     });
 
     // Votes routes with auth middleware

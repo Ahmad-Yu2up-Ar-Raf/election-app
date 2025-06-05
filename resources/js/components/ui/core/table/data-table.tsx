@@ -12,6 +12,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
+  TableMeta,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
@@ -28,6 +29,7 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
+import { Elections, filters } from "@/lib/schema"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -42,20 +44,30 @@ interface DataTableProps<TData, TValue> {
     search: string;
     filter: string;
   };
+  option: any
+  elections?: Elections[]
+    nas?: string
+    
+      createComponent: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
   columns,
+  option,
   data,
   pagination: serverPagination,
   filters,
+nas,
+
+createComponent,
+elections
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [pagination, setPagination] = React.useState({
-    pageIndex: serverPagination.currentPage - 1, // Convert 1-based to 0-based
+    pageIndex: serverPagination.currentPage - 1, 
     pageSize: serverPagination.perPage,
   })
 
@@ -70,6 +82,9 @@ export function DataTable<TData, TValue>({
       columnFilters,
       pagination,
     },
+   meta: {
+      elections: elections
+    } as TableMeta,
     manualPagination: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -78,9 +93,10 @@ export function DataTable<TData, TValue>({
     onPaginationChange: (updater) => {
       const newPagination = typeof updater === 'function' ? updater(pagination) : updater
       setPagination(newPagination)
-      
+        const currentPath = window.location.pathname;
+          const pathNames = currentPath.split('/').filter(path => path)[1]
       inertiaRouter.get(
-        route('dashboard.elections.index'),
+        route(`dashboard.${pathNames}.index`),
         { 
           page: newPagination.pageIndex + 1,
           perPage: newPagination.pageSize,
@@ -90,7 +106,7 @@ export function DataTable<TData, TValue>({
         { 
           preserveState: true,
           preserveScroll: true,
-          only: ['elections', 'pagination']
+          only: [pathNames, 'pagination']
         }
       )
     },
@@ -104,7 +120,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex flex-col gap-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar filters={filters as filters} getColums={nas} createComponent={createComponent} option={option} table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

@@ -58,7 +58,7 @@ export default function Welcome( { }) {
            </BlurFade>
            <BlurFade duration={1}direction={"up"} delay={2} inView>
 
-            <Link href={route('dashboard.calon.index')} >
+            <Link href={route('dashboard.admind.index')} >
             <ButtonHover12 >
                 Start election
                 </ButtonHover12>

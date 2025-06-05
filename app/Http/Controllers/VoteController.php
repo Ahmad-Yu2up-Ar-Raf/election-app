@@ -26,7 +26,7 @@ class VoteController extends Controller
             ->withCount('candidates')
             ->withCount('voters')
       
-            ->where('user_id', Auth::id()) ;
+;
 
         // Search functionality
         if ($request->has('search') && $request->input('search') !== '') {
@@ -51,7 +51,10 @@ class VoteController extends Controller
                 'end_date' => $item->end_date ? $item->end_date->format('Y-m-d H:i:s') : null,
             ];
         });
+  
+        
 
+        
         return Inertia::render('vote/index', [
             'elections' => $elections->items() ?? [],
             'filters' => [
@@ -127,9 +130,21 @@ class VoteController extends Controller
     {
         // Load candidates with votes count and election data
         $election->load(['candidates' => function($query) {
-            $query->withCount('votes');
+            $query->withCount('votes')->with('votes');
         }]);
 
+
+        
+        $candidate = $election->candidates->map(fn($candidate) => [
+                'id' => $candidate->id,
+                'nama' => $candidate->nama,
+                'kelas' => $candidate->kelas,
+                'picture' => $candidate->picture,
+                'visi' => $candidate->visi,
+                'misi' => $candidate->misi,
+                'votes_count' => $candidate->votes_count,
+                   'votes' => $election->votes,
+        ]);
         return Inertia::render('vote/[id]', [
             'election' => [
                 'id' => $election->id,
@@ -138,16 +153,12 @@ class VoteController extends Controller
                 'start_date' => $election->start_date?->format('Y-m-d H:i:s'),
                 'end_date' => $election->end_date?->format('Y-m-d H:i:s'),
                 'status' => $election->status,
+                'votes' => $election->voters,
+              
             ],
-            'candidates' => $election->candidates->map(fn($candidate) => [
-                'id' => $candidate->id,
-                'nama' => $candidate->nama,
-                'kelas' => $candidate->kelas,
-                'picture' => $candidate->picture,
-                'visi' => $candidate->visi,
-                'misi' => $candidate->misi,
-                'votes_count' => $candidate->votes_count
-            ])
+            'votes' => $candidate->join('votes'),
+            'largest' => $candidate->max('votes_count'),
+            'candidates' =>  $candidate
         ]);
     }
 }

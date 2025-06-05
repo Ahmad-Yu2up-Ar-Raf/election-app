@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 
-class CalonController extends Controller
+class AdmindController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 10);
@@ -26,7 +28,7 @@ class CalonController extends Controller
             });
         }
 
-        $candidate = $query->orderBy('created_at', 'desc')
+        $admind = $query->orderBy('created_at', 'desc')
             ->with(['votes' => function($query) {
                 $query->orderBy('created_at', 'desc');
             }])
@@ -34,20 +36,31 @@ class CalonController extends Controller
             ->with('elections')
             ->paginate($perPage);
 
-        if (request()->has('filter') && request('filter') !== 'all') {
-            $candidate->where('status', request('filter') === 'active' ? 'active' : 'inactive');
-        }
+        // if (request()->has('filter') && request('filter') !== 'all') {
+        //     $admind->where('status', request('filter') === 'active' ? 'active' : 'inactive');
+        // }
 
-        $candidate->through(function($item) {
+        $admind->through(function($item) {
             return [
                 ...$item->toArray(),
                 'picture' => $item->picture ? url($item->picture) : null
             ];
         });
 
+        // Get votes only for calon owned by current user
+        $votes = \App\Models\Vote::whereIn('calon_id', function($query) {
+            $query->select('id')
+                  ->from('calon')
+                  ->where('user_id', Auth::id());
+        })
+        ->with('calon')
+        ->orderBy('created_at', 'desc')
+        ->get();
 
 
- $elections = \App\Models\Election::where('user_id', Auth::id())
+
+
+        $elections = \App\Models\Election::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->with('candidates')
             ->withCount('candidates')
@@ -61,20 +74,21 @@ class CalonController extends Controller
             ];
         });
 
-        return Inertia::render('dashboard/candidate', [
-            'calon' => $candidate->items() ?? [],
-     
-           'elections' => $elections->items() ?? [],
+        
+        return Inertia::render('dashboard/admind', [
+            'calon' => $admind->items() ?? [],
+            'votes' => $votes,
+            'elections' => $elections->items() ?? [],
             'filters' => [
                 'search' => request('search', ''),
                 'filter' => request('filter', 'all'),
             ],
             'pagination' => [
-                'data' => $candidate->toArray(),
-                'total' => $candidate->total(),
-                'currentPage' => $candidate->currentPage(),
-                'perPage' => $candidate->perPage(),
-                'lastPage' => $candidate->lastPage(),
+                'data' => $admind->toArray(),
+                'total' => $admind->total(),
+                'currentPage' => $admind->currentPage(),
+                'perPage' => $admind->perPage(),
+                'lastPage' => $admind->lastPage(),
             ],
             'flash' => [
                 'success' => session('success'),
@@ -120,13 +134,13 @@ class CalonController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        return redirect()->route('dashboard.candidate.index')->with('success', 'Calon created successfully');
+        return redirect()->route('dashboard.admind.index')->with('success', 'Calon created successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Calon $candidate)
+    public function show(Calon $admind)
     {
         //
     }
@@ -134,7 +148,7 @@ class CalonController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Calon $candidate)
+    public function edit(Calon $admind)
     {
         //
     }
@@ -142,20 +156,20 @@ class CalonController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Calon $candidate)
+    public function update(Request $request, Calon $admind)
     {
         // Debug: Log semua data yang diterima
         Log::info('Update request data:', $request->all());
         Log::info('Files received:', $request->allFiles());
         
         // Pastikan user hanya bisa update calon miliknya sendiri
-        if ($candidate->user_id !== Auth::id()) {
-            return redirect()->route('dashboard.candidate.index')->with('error', 'Unauthorized access');
+        if ($admind->user_id !== Auth::id()) {
+            return redirect()->route('dashboard.admind.index')->with('error', 'Unauthorized access');
         }
 
         // Validasi dengan rules yang lebih fleksibel untuk update
         $validated = $request->validate([
-            'nama' => 'required|string|max:255|unique:calon,nama,' . $candidate->id,
+            'nama' => 'required|string|max:255|unique:calon,nama,' . $admind->id,
             'gender' => 'required|string|in:male,female',
             'status' => 'required|string',
             'kelas' => 'required|string|max:255',
@@ -183,9 +197,9 @@ class CalonController extends Controller
             Log::info('New picture file detected');
             
             // Hapus gambar lama jika ada
-            if ($candidate->picture && Storage::disk('public')->exists(str_replace('storage/', '', $candidate->picture))) {
-                Storage::disk('public')->delete(str_replace('storage/', '', $candidate->picture));
-                Log::info('Old picture deleted: ' . $candidate->picture);
+            if ($admind->picture && Storage::disk('public')->exists(str_replace('storage/', '', $admind->picture))) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $admind->picture));
+                Log::info('Old picture deleted: ' . $admind->picture);
             }
             
             // Upload gambar baru
@@ -204,11 +218,11 @@ class CalonController extends Controller
         Log::info('Final update data:', $updateData);
 
         // Update data
-        $candidate->update($updateData);
+        $admind->update($updateData);
 
         Log::info('Calon updated successfully');
 
-        return redirect()->route('dashboard.candidate.index')->with('success', 'Calon updated successfully');
+        return redirect()->route('dashboard.admind.index')->with('success', 'Calon updated successfully');
     }
 
     /**
@@ -216,19 +230,19 @@ class CalonController extends Controller
      */
     public function destroy(string $id)
     {
-        $candidate = Calon::findOrFail($id);
+        $admind = Calon::findOrFail($id);
         
         // Pastikan user hanya bisa delete calon miliknya sendiri
-        if ($candidate->user_id !== Auth::id()) {
-            return redirect()->route('dashboard.candidate.index')->with('error', 'Unauthorized access');
+        if ($admind->user_id !== Auth::id()) {
+            return redirect()->route('dashboard.admind.index')->with('error', 'Unauthorized access');
         }
 
         // Hapus gambar jika ada
-        if ($candidate->picture && Storage::disk('public')->exists(str_replace('storage/', '', $candidate->picture))) {
-            Storage::disk('public')->delete(str_replace('storage/', '', $candidate->picture));
+        if ($admind->picture && Storage::disk('public')->exists(str_replace('storage/', '', $admind->picture))) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $admind->picture));
         }
 
-        $candidate->delete();
-        return redirect()->route('dashboard.candidate.index')->with('success', 'Data deleted successfully!');
+        $admind->delete();
+        return redirect()->route('dashboard.admind.index')->with('success', 'Data deleted successfully!');
     }
 }

@@ -1,1 +1,1 @@
-DELETE FROM `elections` WHERE `status` = 'active';
+INSERT INTO votes(`calon_id`, `election_id`, `created_at` ,`updated_at`) VALUES(20, 8, '2025-09-05 03:59:50'  ,  '2025-08-05 03:59:50' )

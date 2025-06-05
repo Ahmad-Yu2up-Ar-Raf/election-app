@@ -1,3 +1,4 @@
+import Password from '@/pages/settings/password';
 import { update } from 'lodash';
 import { z } from 'zod';
 
@@ -53,6 +54,20 @@ export const calonCreateSchema = z.object({
       }
     ),
 });
+export const userCreateSchema = z.object({
+  name: z.string().min(4, "Name is required"),
+  email: z.string().min(3, "email is required"),
+  password: z.string().min(8, "password min 8"),
+  password_confirmation: z.string().min(8, "password min 8"),
+  role: z.string().min(1, "Role is required"),
+});
+export const userUpdateSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().optional(),
+  password: z.string().optional(),
+  password_confirmation: z.string().optional(),
+  role: z.string().optional(),
+});
 
 // Schema khusus untuk update (bisa File atau string, tapi tidak required)
 export const calonUpdateSchema = z.object({
@@ -84,19 +99,19 @@ export const calonUpdateSchema = z.object({
 
 export const electionCreateSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  status: z.string().optional(),
+  // status: z.string().optional(),
   description: z.string().optional(),
-  start_date: z.date().min(new Date(), "Start date must be in the future"),
-  end_date: z.date().min(new Date(), "End date must be in the future"),
+ start_date: z.unknown(),
+   end_date: z.unknown(),
   capacity: z.coerce.number().int().min(1, "Capacity must be at least 1"),
 });
 
 export  const Updateelections = z.object({
   title: z.string().min(1, "Title is required").optional(),
   status: z.string().optional(),
+  start_date: z.unknown(),
+   end_date: z.unknown(),
   description: z.string().optional(),
-  start_date: z.date().optional(),
-  end_date: z.date().min(new Date(), "End date must be in the future").optional(),
   capacity: z.coerce.number().int().min(1, "Capacity must be at least 1").optional(),
 });
 
@@ -104,5 +119,8 @@ export  const Updateelections = z.object({
 export type ElectionCreate  = z.infer<typeof electionCreateSchema>;
 export type UpdateElections = z.infer<typeof Updateelections>;
 export type CalonSchemaForm = z.infer<typeof calonSchemaForm>;
+export type UsersSchemaForm = z.infer<typeof userCreateSchema>;
+export type UsersUpdateForm = z.infer<typeof userUpdateSchema>;
 export type CalonCreateSchema = z.infer<typeof calonCreateSchema>;
+export type UserCreateSchema = z.infer<typeof userCreateSchema>;
 export type CalonUpdateSchema = z.infer<typeof calonUpdateSchema>;

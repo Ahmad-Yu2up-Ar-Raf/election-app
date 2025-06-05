@@ -10,13 +10,14 @@ import {
 
 import { Elections } from "@/lib/schema"
 
-import { columns } from "@/components/ui/core/table/elections-columns"
-import { statuses } from "@/data/data"
-import { CreateTaskSheet } from "@/components/ui/core/create-elections-sheet"
+import { columns } from "@/components/ui/core/table/users-columns"
+import { role, statuses } from "@/data/data"
+import { CreateTaskSheet } from "@/components/ui/core/create-users-sheet"
+import { User } from "@/types"
 
 
 interface PaginatedData {
-    data: Elections[];
+    data: User[];
     currentPage: number;
     lastPage: number;
     perPage: number;
@@ -29,7 +30,7 @@ interface PaginatedData {
 }
 
 interface ElectionsPageProps {
-  elections: Elections[];
+  users: User[];
   pagination: PaginatedData;
 
   filters: {
@@ -42,10 +43,10 @@ interface ElectionsPageProps {
   };
 }
 
-export default function Page({ pagination, filters, flash, elections }: ElectionsPageProps) {
+export default function Page({ pagination, filters, flash, users }: ElectionsPageProps) {
 
 
-    console.log("elections", elections);
+    console.log(users);
     
     return (
         <SidebarProvider
@@ -67,20 +68,19 @@ export default function Page({ pagination, filters, flash, elections }: Election
 
 
             <header className="flex items-center justify-between space-y-1">
-              <h2 className="text-2xl font-bold tracking-tight">Elections Management</h2>
+              <h2 className="text-2xl font-bold tracking-tight">Adminds Management</h2>
             
               {/* <CreateTaskSheet  /> */}
             </header>
 
-            <DataTable 
-             nas="title"
-            createComponent={<CreateTaskSheet/>}
-              data={elections} 
-              columns={columns}
-              pagination={pagination}
-              filters={filters}
-             option={statuses}
-            />
+          <DataTable 
+                   createComponent={<CreateTaskSheet/>}
+                     data={users} 
+                     columns={columns}
+                     pagination={pagination}
+                     filters={filters}
+                    option={role}
+                   />
 
                 </div>
                 </div>

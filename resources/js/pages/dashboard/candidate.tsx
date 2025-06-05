@@ -8,15 +8,15 @@ import {
   SidebarProvider,
 } from "@/components/ui/fragments/sidebar"
 
-import { Elections } from "@/lib/schema"
+import { CalonType, Elections } from "@/lib/schema"
 
-import { columns } from "@/components/ui/core/table/elections-columns"
-import { statuses } from "@/data/data"
-import { CreateTaskSheet } from "@/components/ui/core/create-elections-sheet"
+import { columns } from "@/components/ui/core/table/candidate-columns"
+import { statuse } from "@/data/data"
+import { CreateTaskSheet } from "@/components/ui/core/create-calon-sheet"
 
 
 interface PaginatedData {
-    data: Elections[];
+    data: CalonType[];
     currentPage: number;
     lastPage: number;
     perPage: number;
@@ -26,12 +26,13 @@ interface PaginatedData {
         label: string;
         active: boolean;
     }[];
+
 }
 
 interface ElectionsPageProps {
-  elections: Elections[];
+  calon: CalonType[]
   pagination: PaginatedData;
-
+     elections: Elections[]
   filters: {
     search: string;
     filter: string;
@@ -42,10 +43,10 @@ interface ElectionsPageProps {
   };
 }
 
-export default function Page({ pagination, filters, flash, elections }: ElectionsPageProps) {
+export default function Page({ pagination, filters, flash, calon , elections}: ElectionsPageProps) {
 
 
-    console.log("elections", elections);
+
     
     return (
         <SidebarProvider
@@ -58,7 +59,7 @@ export default function Page({ pagination, filters, flash, elections }: Election
         >
             <AppSidebar variant="inset" />
             <SidebarInset>
-                <SiteHeader siteName="Elections" />
+                <SiteHeader siteName="Candidate" />
                     <div className="flex flex-1 flex-col">
                     <div className="@container/main flex flex-1 flex-col gap-2">
                 
@@ -67,19 +68,22 @@ export default function Page({ pagination, filters, flash, elections }: Election
 
 
             <header className="flex items-center justify-between space-y-1">
-              <h2 className="text-2xl font-bold tracking-tight">Elections Management</h2>
+              <h2 className="text-2xl font-bold tracking-tight">Candidate Management</h2>
             
               {/* <CreateTaskSheet  /> */}
             </header>
 
             <DataTable 
-             nas="title"
-            createComponent={<CreateTaskSheet/>}
-              data={elections} 
+            nas="nama"
+            createComponent={
+          <CreateTaskSheet elections={elections}/>
+            }
+            option={statuse}
+              data={calon} 
               columns={columns}
               pagination={pagination}
               filters={filters}
-             option={statuses}
+              elections={elections}
             />
 
                 </div>

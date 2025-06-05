@@ -35,13 +35,19 @@ import { router } from "@inertiajs/react";
 interface UpdateTaskSheetProps
   extends React.ComponentPropsWithRef<typeof Sheet> {
   task: CalonType | null;
+  
   elections: Elections[]
 }
+
+
 
 export function UpdateTaskSheet({ task, elections, ...props }: UpdateTaskSheetProps) {
   const [isPending, startTransition] = React.useTransition();
   const [loading, setLoading] = React.useState(false);
   
+        const currentPath = window.location.pathname;
+          const pathNames = currentPath.split('/').filter(path => path)[1]
+ 
   const form = useForm<CalonUpdateSchema>({
     resolver: zodResolver(calonUpdateSchema),
     defaultValues: {
@@ -80,30 +86,28 @@ export function UpdateTaskSheet({ task, elections, ...props }: UpdateTaskSheetPr
     
     setLoading(true);
     startTransition(() => {
-      // Gunakan router.post dengan _method: 'PUT' untuk file upload
-      // Ini adalah cara yang benar untuk Inertia.js + Laravel
+   
       const formData = new FormData();
       
       // Append data biasa
-      formData.append('nama', input.nama);
-      formData.append('kelas', input.kelas);
-      formData.append('gender', input.gender || 'male');
-      formData.append('status', input.status || 'active');
-      formData.append('visi', input.visi || '');
-      formData.append('misi', input.misi || '');
+      formData.append('nama', input.nama!);
+      formData.append('kelas', input.kelas!);
+      formData.append('gender', input.gender!);
+      formData.append('status', input.status!);
+      formData.append('visi', input.visi!);
+      formData.append('misi', input.misi!);
        formData.append('election_id', input.election_id ? input.election_id.toString() : "");
-      formData.append('_method', 'PUT'); // Laravel method spoofing
+      formData.append('_method', 'PUT'); 
       
-      // Handle picture - hanya append jika ada file baru
+
       if (input.picture instanceof File) {
         formData.append('picture', input.picture);
         console.log('Adding new picture file to FormData');
       }
-      
       console.log('Sending request with FormData');
       
-      // Gunakan router.post (bukan router.put) dengan FormData
-      router.post(route('dashboard.calon.update', { calon: task.id }), formData, {
+      if (pathNames === "admind") {
+            router.post(route(`dashboard.admind.update`, { admind: task.id }), formData, {
         preserveScroll: true,
         preserveState: true,
         forceFormData: true, // Paksa gunakan FormData
@@ -152,6 +156,59 @@ export function UpdateTaskSheet({ task, elections, ...props }: UpdateTaskSheetPr
           console.log('Request finished');
         }
       });
+      }else {
+            router.post(route(`dashboard.candidate.update`, { candidate: task.id }), formData, {
+        preserveScroll: true,
+        preserveState: true,
+        forceFormData: true, // Paksa gunakan FormData
+        onBefore: (visit) => {
+          console.log('Request about to start:', visit);
+        },
+        onStart: (visit) => {
+          console.log('Request started');
+          toast.loading('Updating student data...', { id: 'update-toast' });
+        },
+        onSuccess: (page) => {
+          console.log('Success response:', page);
+          setLoading(false);
+          props.onOpenChange?.(false);
+          toast.success('Student updated successfully', { id: 'update-toast' });
+          form.reset();
+        },
+        onError: (errors) => {
+          setLoading(false);
+          console.error('Form submission error:', errors);
+          
+          if (typeof errors === 'object' && errors !== null) {
+            Object.entries(errors).forEach(([field, messages]) => {
+              if (Array.isArray(messages)) {
+                messages.forEach((msg: string) => {
+                  toast.error(`${field}: ${msg}`, { id: 'update-toast' });
+                  form.setError(field as any, { 
+                    type: 'manual',
+                    message: msg
+                  });
+                });
+              } else if (typeof messages === 'string') {
+                toast.error(`${field}: ${messages}`, { id: 'update-toast' });
+                form.setError(field as any, { 
+                  type: 'manual',
+                  message: messages
+                });
+              }
+            });
+          } else {
+            toast.error('Failed to update student data', { id: 'update-toast' });
+          }
+        },
+        onFinish: () => {
+          setLoading(false);
+          console.log('Request finished');
+        }
+      });
+      }
+      // Gunakan router.post (bukan router.put) dengan FormData
+  
     });
   }
 

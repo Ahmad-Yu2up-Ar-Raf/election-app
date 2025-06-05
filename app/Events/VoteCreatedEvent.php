@@ -14,17 +14,17 @@ class VoteCreatedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $vote;
+    public $votes;
 
-    public function __construct(Vote $vote)
+    public function __construct($votes)
     {
-        $this->vote = $vote;
+        $this->votes = $votes;
     }
 
     public function broadcastOn(): array
     {
         return [
-            new Channel('votes'),
+            new Channel('vote'), // Sesuaikan dengan channel di frontend
         ];
     }
 
@@ -32,10 +32,11 @@ class VoteCreatedEvent implements ShouldBroadcast
     {
         return 'VoteCreatedEvent';
     }
+    
     public function broadcastWith()
-{
-    return [
-        'vote' => $this->vote->load('calon') // Load relasi jika diperlukan
-    ];
-}
+    {
+        return [
+            'votes' => $this->votes // Kirim semua votes sesuai expected format frontend
+        ];
+    }
 }

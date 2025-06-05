@@ -1,24 +1,75 @@
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ChevronDown } from 'lucide-react';
-import { CalonType } from '@/lib/schema';
+import { CalonType, Vote } from '@/lib/schema';
 import { Elections } from '@/lib/schema';
 import { Spotlight } from '@/components/ui/core/spotlight-new';
 import { cn } from '@/lib/utils';
 import { BlurFade } from '@/components/ui/core/animate/blur-fade';
 import CandidateCard from '@/components/ui/core/vote/list-card';
-import React from 'react';
+import { ChartAreaGradient } from '@/components/ui/core/data/chart-area-gradient';
+import React, { useMemo } from 'react';
 interface VoteDetailProps {
   election: Elections;
   candidates: CalonType[];
+  largest : number
+  votes: Vote[]
 }
+import { useEffect, useState } from "react";
 import TabelBatang from '@/components/ui/core/data/bar-chart';
 import PieChart from '@/components/ui/core/data/pie-chart';
-export default function VoteDetail({ election, candidates }: VoteDetailProps) {
-  console.log("Election Data:", election);
-  console.log("Candidates Data:", candidates);
+import { symbol } from 'zod';
+import Countdown from '@/components/ui/core/Countdown';
+export default function VoteDetail({ election, candidates, votes, largest }: VoteDetailProps) {
+
+  console.log(votes);
  const [isFinnished, setIsFinished] = React.useState(false);
  const [isFinnishedScroll, setIsFinishedScroll] = React.useState(false);
+  
+    
+
+
+
+
+
+
+ const [partyTime, setPartyTime] = useState(false);
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const target = new Date(election.end_date);
+
+    const interval = setInterval(() => {
+      const now = new Date(election.start_date);
+      const difference = target.getTime() - now.getTime();
+
+      const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+      setDays(d);
+
+      const h = Math.floor(
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      setHours(h);
+
+      const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      setMinutes(m);
+
+      const s = Math.floor((difference % (1000 * 60)) / 1000);
+      setSeconds(s);
+
+      if (d <= 0 && h <= 0 && m <= 0 && s <= 0) {
+        setPartyTime(true);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [days, hours, minutes,seconds]);
+
+
+      
   return (
     <>
       <Head title={`Vote - ${election.title}`}>
@@ -97,8 +148,9 @@ export default function VoteDetail({ election, candidates }: VoteDetailProps) {
       
         </main>
       </section>
- {election.status === 'finished' && (
-    <section id='candidate' className='min-h-screen mt-30 py-30   h-full'>
+ {election.status === 'finished' ? (
+  <>
+    <section id='result' className='min-h-screen mt-30 py-30   h-full'>
         <main className='container gap-15 md:gap-17  mx-auto relative  flex flex-col items-center justify-center '>
  <header className='flex space-y-3  flex-col items-center justify-center px-4 py-2'>
     <BlurFade duration={1} direction={"up"} delay={0.5} inView>
@@ -110,18 +162,56 @@ export default function VoteDetail({ election, candidates }: VoteDetailProps) {
      </BlurFade>
  </header>
 
-  <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+  <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 md:grid-cols-2 gap-10 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 ">
     <BlurFade duration={1} direction={"up"} delay={1} inView>
       <PieChart calon={candidates}/>
       </BlurFade>
-         <BlurFade duration={1} direction={"up"} delay={1.5} inView>
+         {/* <BlurFade duration={1} direction={"up"} delay={1.5} inView>
 
+    <ChartAreaGradient/>
+         </BlurFade> */}
+         <BlurFade duration={1} direction={"up"} delay={2} inView>
       <TabelBatang calon={candidates} />
+
          </BlurFade>
   </div>
         </main>
       </section>
+    <section id='winner' className='min-h-screen mt-30 py-30   h-full'>
+        <main className='container gap-15 md:gap-17  mx-auto relative  flex flex-col items-center justify-center '>
+ <header className='flex space-y-3  flex-col items-center justify-center px-4 py-2'>
+    <BlurFade duration={1} direction={"up"} delay={0.5} inView>
+    <h1 className='  bg-opacity-50 bg-gradient-to-b m-auto max-w-[10em] from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-5xl '>The Winner</h1>
+    </BlurFade>
+     <BlurFade duration={1}  direction={"up"} delay={0.7} inView>
+
+    <p className='  px-10 text-center   text-muted-foreground'> This is the winner from the elections </p>
+     </BlurFade>
+ </header>
+ {candidates.length > 0  && candidates.map((candidate, i) =>  {
+  const Winner = candidate.votes_count >= largest
+  if(Winner)
+ return(
+
+<BlurFade key={i} duration={1} direction={"up"} delay={i * 0.8} onAnimationComplete={() => i === candidates.length - 1 && setIsFinishedScroll(true)} inView>
+        <CandidateCard  election={election}   Calon={candidate} />
+        </BlurFade> 
+    )
+ })}
+ 
+        </main>
+      </section>
+  </>
+ ) : (
+   <section id='countdown' className='min-h-screen  content-center  h-full'>
+   <BlurFade duration={1} direction={"up"} delay={0.5} inView>
+
+     <Countdown targetDate={election.end_date} />
+   </BlurFade>
+   </section>
  )}
+
+
     </section>
 
 

@@ -3,7 +3,9 @@
 import { CalonType, Elections } from "@/lib/schema";
 import * as React from "react";
 import type { FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
-
+import {
+  id
+} from "date-fns/locale"
 import {
   Form,
   FormControl,
@@ -34,6 +36,7 @@ import {
   format
 } from "date-fns"
 import { Calendar } from "../fragments/calendar";
+import { SmartDatetimeInput } from "../fragments/smart-date-time";
 interface TaskFormProps<T extends FieldValues>
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
   children: React.ReactNode;
@@ -41,13 +44,13 @@ interface TaskFormProps<T extends FieldValues>
   onSubmit: (data: T) => void;
   isPending: boolean;
   currentEmployee?: Elections;
-
+  isUpdate: boolean
 }
 
 export function TaskForm<T extends FieldValues>({
   form,
   onSubmit,
-
+   isUpdate,
   children,
   currentEmployee,
   isPending,
@@ -60,9 +63,9 @@ export function TaskForm<T extends FieldValues>({
 const status: string[] = [
     'ongoing',
     "finished", 
-    'completed',
+ "cancelled",
     'upcoming',
-   
+   'inactive'
 ]
 
 
@@ -126,88 +129,52 @@ const gender: string[] = [
             
       
  
- <FormField
-      control={form.control}
-    name={"start_date" as FieldPath<T>}
-        defaultValue={currentEmployee?.start_date as any || ""}
-      render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <FormLabel>Start Date</FormLabel>
-          <Popover>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
-                  )}
-                >
-                  {field.value ? (
-                    format(field.value, "PPP")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={field.value}
-                onSelect={field.onChange}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-       <FormDescription>Start Date</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-
- <FormField
-      control={form.control}
-    name={"end_date" as FieldPath<T>}
-        defaultValue={currentEmployee?.end_date as any || ""}
-      render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <FormLabel>End Date</FormLabel>
-          <Popover>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
-                  )}
-                >
-                  {field.value ? (
-                    format(field.value, "PPP")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={field.value}
-                onSelect={field.onChange}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-       <FormDescription>End Date</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-
+  <FormField
+              control={form.control}
+          name={"start_date" as FieldPath<T>}
+           defaultValue={currentEmployee?.start_date as any || ""}
+              render={({ field }) => (
+              <FormItem>
+                <FormLabel>What's the best time for you?</FormLabel>
+                <FormControl>
+                  <SmartDatetimeInput
+                    value={field.value}
+                        locale={id}
+                    hour12
+                    onValueChange={field.onChange}
+                    placeholder="e.g. Tomorrow morning 9am"
+               
+                  />
+                </FormControl>
+                <FormDescription>Please select the full time</FormDescription>
+                <FormMessage />
+              </FormItem>
+              )}
+            />
+        
+            <FormField
+              control={form.control}
+          name={"end_date" as FieldPath<T>}
+           defaultValue={currentEmployee?.end_date as any || ""}
+              render={({ field }) => (
+              <FormItem>
+                <FormLabel>What's the best time for you?</FormLabel>
+                <FormControl>
+                  <SmartDatetimeInput
+                    value={field.value}
+                    onValueChange={field.onChange}
+                      locale={id}
+                    hour12
+                    placeholder="e.g. Tomorrow morning 9am"
+         
+                    
+                  />
+                </FormControl>
+                <FormDescription>Please select the full time</FormDescription>
+                <FormMessage />
+              </FormItem>
+              )}
+            />
           </section>
           
           <section className="space-y-10 px-4 sm:px-6">
@@ -248,7 +215,7 @@ const gender: string[] = [
 
        
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name={"status" as FieldPath<T>}
                                defaultValue={currentEmployee?.status as any || ""}
@@ -281,7 +248,7 @@ const gender: string[] = [
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
      
       

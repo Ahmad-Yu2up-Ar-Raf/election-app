@@ -17,8 +17,8 @@ import {
   SheetTitle,
 } from "@/components/ui/fragments/sheet";
 
-import { type CalonUpdateSchema, calonUpdateSchema, Updateelections, UpdateElections } from "@/lib/validations";
-import { TaskForm as CalonForm } from "./elections-form";
+import { type CalonUpdateSchema, calonUpdateSchema, UserCreateSchema, UsersUpdateForm, userUpdateSchema } from "@/lib/validations";
+import { TaskForm as CalonForm } from "./user-form";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Drawer,
@@ -29,49 +29,51 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/fragments/drawer";
-import { CalonType, Elections } from "@/lib/schema";
+
 import { router } from "@inertiajs/react";
+import { User } from "@/types";
 
 interface UpdateTaskSheetProps
   extends React.ComponentPropsWithRef<typeof Sheet> {
-  task: Elections | null;
+  task: User | null;
+  
 
 }
 
-export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
+
+
+export function UpdateTaskSheet({ task,  ...props }: UpdateTaskSheetProps) {
   const [isPending, startTransition] = React.useTransition();
   const [loading, setLoading] = React.useState(false);
   
-  const form = useForm<UpdateElections>({
-    resolver: zodResolver(Updateelections),
+        const currentPath = window.location.pathname;
+          const pathNames = currentPath.split('/').filter(path => path)[1]
+ 
+  const form = useForm<UsersUpdateForm>({
+    resolver: zodResolver(userUpdateSchema),
     defaultValues: {
-   title: task?.title || '',
-      capacity: task?.capacity || 0,
-      start_date: task?.start_date ? new Date(task.start_date) : new Date(),
-      end_date: task?.end_date ? new Date(task.end_date) : new Date(),
-      description: task?.description || '',
-      status: task?.status || 'active',
-  
+      name: task?.name || '',
+  password: task?.password || "",
+  password_confirmation: task?.password_confirmation || "",
+   role: task?.role || "",
+   email: task?.email || ""
     },
   });
 
-  // Reset form ketika task berubah
   React.useEffect(() => {
     if (task) {
       form.reset({
-         title: task?.title || '',
-      capacity: task?.capacity || 0,
-      start_date: task?.start_date ? new Date(task.start_date) : new Date(),
-      end_date: task?.end_date ? new Date(task.end_date) : new Date(),
-      description: task?.description || '',
-      status: task?.status || 'active',
+    name: task?.name || '',
+  password: task?.password || "",
+  password_confirmation: task?.password_confirmation || "",
+   role: task?.role || "",
+   email: task?.email || ""
       });
     }
   }, [task, form]);
-
-  function onSubmit(input: UpdateElections) {
+  function onSubmit(input: UsersUpdateForm) {
     if (!task?.id) {
-      toast.error("elections ID is missing");
+      toast.error("Student ID is missing");
       return;
     }
     
@@ -79,24 +81,24 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
     
     setLoading(true);
     startTransition(() => {
-      // Gunakan router.post dengan _method: 'PUT' untuk file upload
-      // Ini adalah cara yang benar untuk Inertia.js + Laravel
+   
       const formData = new FormData();
       
-      // Append semua field
-    formData.append('title', input.title!);
-    formData.append('capacity', input.capacity!.toString());
-    formData.append('start_date', input.start_date!.toISOString());
-    formData.append('end_date', input.end_date!.toISOString());
-    formData.append('status', input.status || "active");
+      // Append data biasa
+    formData.append('name', input.name!);
+    formData.append('email', input.email!);
+    formData.append('role', input.role!);
+    formData.append('password', input.password!);
+    formData.append('password_confirmation', input.password_confirmation!);
 
+ 
+      formData.append('_method', 'PUT'); 
+      
 
-    if (input.description) {
-      formData.append('description', input.description);
-    }
-          formData.append('_method', 'PUT'); // Laravel method spoofing
-      // Gunakan router.post (bukan router.put) dengan FormData
-      router.post(route('dashboard.elections.update',  task.id ), formData, {
+    
+      
+   
+            router.post(route(`dashboard.users.update`, { user: task.id }), formData, {
         preserveScroll: true,
         preserveState: true,
         forceFormData: true, // Paksa gunakan FormData
@@ -105,13 +107,13 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
         },
         onStart: (visit) => {
           console.log('Request started');
-          toast.loading('Updating elections data...', { id: 'update-toast' });
+          toast.loading('Updating student data...', { id: 'update-toast' });
         },
         onSuccess: (page) => {
           console.log('Success response:', page);
           setLoading(false);
           props.onOpenChange?.(false);
-          toast.success('elections updated successfully', { id: 'update-toast' });
+          toast.success('Student updated successfully', { id: 'update-toast' });
           form.reset();
         },
         onError: (errors) => {
@@ -137,7 +139,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
               }
             });
           } else {
-            toast.error('Failed to update elections data', { id: 'update-toast' });
+            toast.error('Failed to update student data', { id: 'update-toast' });
           }
         },
         onFinish: () => {
@@ -145,6 +147,9 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
           console.log('Request finished');
         }
       });
+  
+   
+  
     });
   }
 
@@ -158,19 +163,19 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
             <SheetTitle className="text-lg">
               Update
               <Button type="button" variant={"outline"} className="ml-2 px-2.5 text-base">
-                {task?.title}
+                {task?.name}
               </Button>
             </SheetTitle>
             <SheetDescription className="sr-only">
               Fill in the details below to update the task
             </SheetDescription>
           </SheetHeader>
-          <CalonForm<UpdateElections> 
+          <CalonForm<UsersUpdateForm> 
             form={form} 
             onSubmit={onSubmit} 
             isPending={loading} 
             currentEmployee={task!}
-           
+    isUpdated={true}
           >
             <SheetFooter className="gap-3 px-3 py-4 w-full flex-row justify-end flex border-t sm:space-x-0">
               <SheetClose disabled={loading} asChild onClick={() => form.reset()}>
@@ -197,16 +202,16 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
           <DrawerTitle className="text-xl">
             Update
             <Button type="button" variant={"outline"} className="ml-2 px-2.5 text-base">
-              {task?.title}
+              {task?.name}
             </Button>
           </DrawerTitle>
           <DrawerDescription className="text-sm">
             Fill in the details below to update the task
           </DrawerDescription>
         </DrawerHeader>
-        <CalonForm<UpdateElections> 
+        <CalonForm<UsersUpdateForm> 
           form={form} 
-            
+               isUpdated={true}
           onSubmit={onSubmit} 
           isPending={loading} 
           currentEmployee={task!} 

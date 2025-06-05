@@ -33,6 +33,8 @@ function CandidateCard({ Calon, electionId }: IndexProps) {
     console.log('Voting for:', {
       calon_id: Calon.id,
       election_id: electionId,
+      created_at: '2025-09-05 03:59:50',
+      updated_at: '2025-09-05 03:59:50',
       route: route('vote.store', electionId)
     });
     
