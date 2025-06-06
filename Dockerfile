@@ -1,28 +1,18 @@
-# Use PHP 8.2 with Alpine (lebih ringan)
-FROM php:8.2-fpm-alpine
+FROM php:8.2-cli
 
-# Install system dependencies dan PHP extensions yang dibutuhkan Laravel + SQLite
-RUN apk add --no-cache \
-    build-base \
-    curl \
+# Install dependencies termasuk Node.js terbaru
+RUN apt-get update && apt-get install -y \
+    git \
     zip \
     unzip \
-    git \
-    nodejs \
-    npm \
-    nginx \
-    supervisor \
-    sqlite \
-    sqlite-dev \
-    && docker-php-ext-install \
-    pdo \
-    pdo_sqlite \
-    bcmath \
-    ctype \
-    fileinfo \
-    mbstring \
-    tokenizer \
-    xml
+    sqlite3 \
+    libsqlite3-dev \
+    curl \
+    && docker-php-ext-install pdo_sqlite
+
+# Install Node.js versi LTS
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+    && apt-get install -y nodejs
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -30,59 +20,33 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /app
 
-# Copy composer files terlebih dahulu (untuk better Docker layer caching)
+# Copy composer files dulu
 COPY composer.json composer.lock ./
 
-# Set memory limit untuk composer
-ENV COMPOSER_MEMORY_LIMIT=-1
-
 # Install PHP dependencies
-RUN composer install \
-    --no-dev \
-    --no-scripts \
-    --no-autoloader \
-    --ignore-platform-reqs \
-    --prefer-dist
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-# Copy package.json untuk npm dependencies
+# Copy package.json dan package-lock.json jika ada
 COPY package*.json ./
 
-# Install npm dependencies
-RUN npm ci --only=production
+# Install npm dependencies dengan handling error
+RUN npm install --production --no-optional --no-audit || echo "NPM install failed, continuing without frontend assets"
 
 # Copy seluruh aplikasi
 COPY . .
 
-# Generate autoload dan optimize
-RUN composer dump-autoload --optimize \
-    && composer run-script post-autoload-dump
+# Build assets jika memungkinkan
+RUN npm run build || npm run production || echo "No build script or build failed, continuing..."
 
-# Build assets jika ada
-RUN npm run build || npm run production || echo "No build script found"
+# Create database dan set permissions
+RUN touch database/database.sqlite \
+    && chmod -R 755 storage bootstrap/cache database
 
-# Create SQLite database file dan set permissions
-RUN touch /app/database/database.sqlite \
-    && chown -R www-data:www-data \
-    /app/storage \
-    /app/bootstrap/cache \
-    /app/database \
-    && chmod -R 775 /app/storage \
-    && chmod -R 775 /app/bootstrap/cache \
-    && chmod -R 775 /app/database
-
-# Create directories for logs
-RUN mkdir -p /var/log/nginx \
-    && mkdir -p /var/cache/nginx \
-    && mkdir -p /run/nginx
-
-# Copy nginx configuration
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-
-# Copy supervisor configuration
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /root/.npm
 
 # Expose port
-EXPOSE 8080
+EXPOSE 8000
 
-# Start supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start Laravel
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
