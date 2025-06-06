@@ -2,7 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+      "build": "vite build",
+    "install-legacy": "npm install --legacy-peer-deps",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
         "format": "prettier --write resources/",
@@ -69,7 +70,7 @@
         "motion": "^12.16.0",
         "next-themes": "^0.4.6",
         "react": "^19.0.0",
-        "react-day-picker": "^8.10.1",
+        "react-day-picker": "^9.7.0",
         "react-dom": "^19.0.0",
         "react-hook-form": "^7.56.4",
         "react-use-measure": "^2.1.7",

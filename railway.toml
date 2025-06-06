@@ -1,0 +1,9 @@
+[build]
+builder = "nixpacks"
+
+[build.nixpacksConfig]
+commands = ["npm install --legacy-peer-deps", "npm run build"]
+
+[deploy]
+startCommand = "npm start"
+volumes = ["/app/database"]
