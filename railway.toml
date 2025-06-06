@@ -1,0 +1,14 @@
+[build]
+builder = "nixpacks"
+
+[build.env]
+NODE_VERSION = "18"
+PHP_VERSION = "8.2"
+
+[deploy]
+startCommand = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+
+[env]
+PORT = "8000"
+DB_CONNECTION = "sqlite"
+DB_DATABASE = "/app/database/database.sqlite"
