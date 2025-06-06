@@ -17,8 +17,8 @@ class AdmindController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 10);
-        
-        $query = Calon::where('user_id', Auth::id());
+    $user = Auth::User();
+        $query = Calon::where('user_id', Auth::id())->orWhere('user_id',  $user->team_id);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -47,11 +47,11 @@ class AdmindController extends Controller
             ];
         });
 
-        // Get votes only for calon owned by current user
+
         $votes = \App\Models\Vote::whereIn('calon_id', function($query) {
             $query->select('id')
                   ->from('calon')
-                  ->where('user_id', Auth::id());
+                  ->where('user_id', Auth::id())->orWhere('user_id',  Auth::User()->team_id);
         })
         ->with('calon')
         ->orderBy('created_at', 'desc')
@@ -60,7 +60,7 @@ class AdmindController extends Controller
 
 
 
-        $elections = \App\Models\Election::where('user_id', Auth::id())
+        $elections = \App\Models\Election::where('user_id', Auth::id())->orWhere('user_id',  $user->team_id)
             ->orderBy('created_at', 'desc')
             ->with('candidates')
             ->withCount('candidates')
@@ -109,6 +109,8 @@ class AdmindController extends Controller
      */
     public function store(Request $request)
     {
+
+         $user = Auth::User();
         $validated = $request->validate([
             'nama' => 'required|unique:calon,nama|max:255|string',
             'gender' => 'required|string',
@@ -127,13 +129,29 @@ class AdmindController extends Controller
             $path = $file->storeAs('uploads', $filename, 'public');
             $picturePath = 'storage/' . $path;
         }
-
+      if (isset($user->team_id)) {
         Calon::create([
-            ...$validated,
+       
+ 
+             ...$validated,
             'picture' => $picturePath,
-            'user_id' => Auth::id()
+                   'user_id' => $user->team_id
+      
+      
+     
         ]);
+      }else{
+             Calon::create([
+       
+ 
+                   ...$validated,
+            'picture' => $picturePath,
+                   'user_id' => Auth::id()
+     
+        ]);
+      }
 
+      
         return redirect()->route('dashboard.admind.index')->with('success', 'Calon created successfully');
     }
 

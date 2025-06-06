@@ -15,8 +15,8 @@ class CalonController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 10);
-        
-        $query = Calon::where('user_id', Auth::id());
+                    $user = Auth::User();
+        $query = Calon::where('user_id', Auth::id())->orWhere('user_id',  $user->team_id);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -47,7 +47,7 @@ class CalonController extends Controller
 
 
 
- $elections = \App\Models\Election::where('user_id', Auth::id())
+ $elections = \App\Models\Election::where('user_id', Auth::id())->orWhere('user_id',  $user->team_id)
             ->orderBy('created_at', 'desc')
             ->with('candidates')
             ->withCount('candidates')
@@ -113,12 +113,28 @@ class CalonController extends Controller
             $path = $file->storeAs('uploads', $filename, 'public');
             $picturePath = 'storage/' . $path;
         }
-
+                    $user = Auth::User();
+      if (isset($user->team_id)) {
         Calon::create([
-            ...$validated,
+       
+ 
+             ...$validated,
             'picture' => $picturePath,
-            'user_id' => Auth::id()
+                   'user_id' => $user->team_id
+      
+      
+     
         ]);
+      }else{
+             Calon::create([
+       
+ 
+                   ...$validated,
+            'picture' => $picturePath,
+                   'user_id' => Auth::id()
+     
+        ]);
+      }
 
         return redirect()->route('dashboard.candidate.index')->with('success', 'Calon created successfully');
     }

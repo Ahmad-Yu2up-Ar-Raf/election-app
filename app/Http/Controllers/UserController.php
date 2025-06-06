@@ -21,7 +21,7 @@ class UserController extends Controller
         $search = $request->input('search');
         $filter = $request->input('filter');
 
-    $query = User::query()->orderBy('created_at', 'desc');
+    $query = User::query()->where('team_id', Auth::id())->orderBy('created_at', 'desc');
 
     if ($search) {
         $query->where('name', 'like', "%{$search}%")
@@ -66,6 +66,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            
             'password' => ['required', 'confirmed'],
         ]);
 
@@ -74,6 +75,7 @@ class UserController extends Controller
             'email' => $request->email,
             'role' => $request->role,
             'password' => Hash::make($request->password),
+             'team_id' => Auth::id()
         ]);
 
       
@@ -116,7 +118,7 @@ class UserController extends Controller
 
     $user->update([
             ...$validated,
-        
+               'team_id' => Auth::id()
     ]);
 
   

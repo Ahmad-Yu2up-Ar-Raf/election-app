@@ -11,10 +11,10 @@ import {
 import { CalonType, Vote, Elections } from "@/lib/schema"
 import PieChart from "@/components/ui/core/data/pie-chart"
 import TabelBatang from "@/components/ui/core/data/bar-chart"
-import { useEffect, useState, useCallback } from "react"
-import { toast } from "sonner"
-import { useEcho } from "@laravel/echo-react"
-import { ChartAreaGradient } from "@/components/ui/core/data/chart-area-gradient"
+// import { useEffect, useState, useCallback } from "react"
+// import { toast } from "sonner"
+// import { useEcho } from "@laravel/echo-react"
+// import { ChartAreaGradient } from "@/components/ui/core/data/chart-area-gradient"
 
 interface PaginatedData {
     data: CalonType[];

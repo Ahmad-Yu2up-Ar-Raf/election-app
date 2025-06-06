@@ -17,9 +17,10 @@ class ElectionsController extends Controller
         $perPage = $request->input('perPage', 10);
         $search = $request->input('search');
         $filter = $request->input('filter');
-
+         $user = Auth::User();
         $query = Election::query()
-            ->where('user_id', Auth::id())
+            ->where('user_id', Auth::id())->orWhere('user_id',  $user->team_id)
+           
             ->with('candidates')
             ->withCount('candidates')
             ->with('voters')
@@ -79,10 +80,18 @@ class ElectionsController extends Controller
             'capacity' => 'required|integer|min:1',
         ]);
 
-        $election = Election::create([
+                 $user = Auth::User();
+      if (isset($user->team_id)) {
+             $election = Election::create([
+            ...$validated,
+             'user_id' => $user->team_id
+        ]);
+      }else{
+                      $election = Election::create([
             ...$validated,
             'user_id' => Auth::id()
         ]);
+      }
 
         // Update status berdasarkan tanggal saat ini
         $election->updateStatusBasedOnDate();
@@ -181,7 +190,8 @@ class ElectionsController extends Controller
      */
     public function refreshStatus()
     {
-        $elections = Election::where('user_id', Auth::id())->get();
+              $user = Auth::User();
+        $elections = Election::where('user_id', Auth::id())->orWhere('user_id',  $user->team_id)->orWhere('team_id',  Auth::id())->get();
         
         $updatedCount = 0;
         foreach ($elections as $election) {

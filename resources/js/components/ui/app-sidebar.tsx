@@ -30,18 +30,27 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./fragments/sidebar"
-import { Link, usePage } from "@inertiajs/react"
+import { Link, useForm, usePage } from "@inertiajs/react"
 import { useInitials } from "@/hooks/use-initials"
 import { Separator } from "./fragments/separator"
 import AppLogoIcon from "./app-logo-icon"
 import { HardHat, Users2 } from "lucide-react"
 
-const data = {
-  // user: {
-  //   name: "shadcn",
-  //   email: "m@example.com",
-  //   avatar: "/avatars/shadcn.jpg",
-  // },
+
+
+type ProfileForm = {
+    name: string;
+    email: string;
+    team_id: number
+}
+
+  
+
+   
+
+
+const datas = {
+
   navMain: [
     {
       title: "Dashboard",
@@ -84,93 +93,81 @@ const data = {
     //   icon: IconUsers,
     // },
   ],
-  // navClouds: [
-  //   {
-  //     title: "Capture",
-  //     icon: IconCamera,
-  //     isActive: true,
-  //     url: "#",
-  //     items: [
-  //       {
-  //         title: "Active Proposals",
-  //         url: "#",
-  //       },
-  //       {
-  //         title: "Archived",
-  //         url: "#",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: "Proposal",
-  //     icon: IconFileDescription,
-  //     url: "#",
-  //     items: [
-  //       {
-  //         title: "Active Proposals",
-  //         url: "#",
-  //       },
-  //       {
-  //         title: "Archived",
-  //         url: "#",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: "Prompts",
-  //     icon: IconFileAi,
-  //     url: "#",
-  //     items: [
-  //       {
-  //         title: "Active Proposals",
-  //         url: "#",
-  //       },
-  //       {
-  //         title: "Archived",
-  //         url: "#",
-  //       },
-  //     ],
-  //   },
-  // ],
+ 
   navSecondary: [
     {
       title: "Settings",
       url: "/settings/profile",
       icon: IconSettings,
     },
+   
+  ],
+
+}
+const datass = {
+
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "/dashboard/admind",
+      icon: IconDashboard,
+    },
+    {
+      title: "Elections",
+      url: "/dashboard/elections",
+      icon:  IconListDetails,
+    },
+    {
+      title: "Candidate",
+      url: "/dashboard/candidate",
+      icon:  Users2,
+    },
     // {
-    //   title: "Get Help",
-    //   url: "#",
-    //   icon: IconHelp,
+    //   title: "Adminds",
+    //   url: "/dashboard/users",
+    //   icon:  HardHat,
     // },
     // {
-    //   title: "Search",
+    //   title: "Lifecycle",
     //   url: "#",
-    //   icon: IconSearch,
+    //   icon: IconListDetails,
+    // },
+    // {
+    //   title: "Analytics",
+    //   url: "#",
+    //   icon: IconChartBar,
+    // },
+    // {
+    //   title: "Projects",
+    //   url: "#",
+    //   icon: IconFolder,
+    // },
+    // {
+    //   title: "Team",
+    //   url: "#",
+    //   icon: IconUsers,
     // },
   ],
-  // documents: [
-  //   {
-  //     name: "Data Library",
-  //     url: "#",
-  //     icon: IconDatabase,
-  //   },
-  //   {
-  //     name: "Reports",
-  //     url: "#",
-  //     icon: IconReport,
-  //   },
-  //   {
-  //     name: "Word Assistant",
-  //     url: "#",
-  //     icon: IconFileWord,
-  //   },
-  // ],
+ 
+  navSecondary: [
+    {
+      title: "Settings",
+      url: "/settings/profile",
+      icon: IconSettings,
+    },
+   
+  ],
+
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
      const page = usePage<SharedData>();
     const { auth } = page.props;
+ const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
+        name: auth.user.name,
+        email: auth.user.email,
+        team_id: auth.user.team_id
+    });
 
 
   return (
@@ -199,7 +196,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         
-        <NavMain items={data.navMain} />
+        <NavMain items={data.team_id == null ? datas.navMain :  datass.navMain } />
         {/* <NavDocuments items={data.documents} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
