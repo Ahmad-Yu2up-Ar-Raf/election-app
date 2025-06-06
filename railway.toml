@@ -2,7 +2,12 @@
 builder = "nixpacks"
 
 [build.nixpacksConfig]
-commands = ["npm install --legacy-peer-deps", "npm run build"]
+packages = ["nodejs", "php82"]
 
 [deploy]
-startCommand = "npm start"
+startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[deploy.healthcheckPath]
+path = "/"
