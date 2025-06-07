@@ -18,9 +18,10 @@ export default defineConfig({
         jsx: 'automatic',
     },
     server: {
-       host: '0.0.0.0',
-         port: process.env.PORT || 5173,
+        host: true,
+    
         hmr: {
+            port: 8080,
             host: process.env.VITE_APP_URL || 'localhost',
         }
     },
