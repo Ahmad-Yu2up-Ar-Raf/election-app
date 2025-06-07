@@ -17,9 +17,34 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
+    server: {
+        host: true,
+        hmr: {
+            host: process.env.VITE_APP_URL || 'localhost',
+        }
+    },
     resolve: {
         alias: {
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
+    build: {
+        manifest: true,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
+        assetsDir: 'assets',
+    },
+    // Hapus base configuration - biarkan Laravel handle
+    experimental: {
+        renderBuiltUrl(filename, { hostType }) {
+            if (hostType === 'js') {
+                return `https://election-app-production.up.railway.app/build/${filename}`;
+            } else {
+                return { relative: true };
+            }
+        }
+    }
 });
