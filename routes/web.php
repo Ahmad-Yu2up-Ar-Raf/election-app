@@ -9,7 +9,9 @@ use App\Http\Controllers\VoteController;
 // use App\Models\Election;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');

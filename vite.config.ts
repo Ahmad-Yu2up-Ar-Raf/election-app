@@ -17,12 +17,11 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
-    server: {
-        // Fix the https configuration
-        https: process.env.NODE_ENV === 'production' ? {
-            // Add HTTPS options here if needed
-        } : false,
+ server: {
         host: true,
+        hmr: {
+            host: process.env.VITE_APP_URL || 'localhost',
+        }
     },
     resolve: {
         alias: {

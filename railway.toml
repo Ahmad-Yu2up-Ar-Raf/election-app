@@ -1,11 +1,12 @@
 [build]
 builder = "nixpacks"
+buildCommand = "php artisan config:cache && php artisan route:cache && php artisan view:cache"
 
 [deploy]
-healthcheckPath = "/"
-healthcheckTimeout = 300
-restartPolicyType = "always"
-startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
+startCommand = "php artisan migrate --force && php artisan reverb:start & php artisan serve --host=0.0.0.0 --port=$PORT"
+restartPolicyType = "on-failure"
+healthcheckPath = "/health"
+healthcheckTimeout = 100
 
 [env]
-PORT = "8080"
+PHP_CLI_SERVER_WORKERS = "4"
