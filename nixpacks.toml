@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["nginx", "php81", "php81Packages.composer"]
+
+[phases.build]
+cmds = ["composer install --no-dev --optimize-autoloader"]
+
+[start]
+cmd = "php artisan migrate --force && php artisan config:cache && nginx -g 'daemon off;' & php-fpm"
