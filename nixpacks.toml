@@ -1,0 +1,30 @@
+[variables]
+NIXPACKS_PHP_ROOT_DIR = '/app'
+NIXPACKS_PHP_FALLBACK_PATH = '/app/public/index.php'
+
+[phases.build]
+cmds = [
+    'composer install --no-dev --optimize-autoloader',
+    'npm ci',
+    'npm run build',
+    'php artisan config:clear',
+    'php artisan cache:clear',
+    'php artisan route:clear',
+    'php artisan view:clear'
+]
+
+[phases.deploy]
+cmds = [
+    'php artisan migrate --force',
+    'php artisan db:seed --force',
+    'php artisan config:cache',
+    'php artisan route:cache',
+    'php artisan view:cache',
+    'php artisan storage:link'
+]
+
+[phases.setup]
+cmds = ['mkdir -p /app/storage/logs', 'chmod -R 775 /app/storage', 'chmod -R 775 /app/bootstrap/cache']
+
+[start]
+cmd = 'php artisan serve --host=0.0.0.0 --port=$PORT'
