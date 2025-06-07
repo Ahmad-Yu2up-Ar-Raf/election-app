@@ -17,9 +17,21 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
+       server: {
+        https: process.env.NODE_ENV === 'production',
+        host: true,
+    },
     resolve: {
         alias: {
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
+        },
+    },
+    build: {
+        manifest: true,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
         },
     },
 });
