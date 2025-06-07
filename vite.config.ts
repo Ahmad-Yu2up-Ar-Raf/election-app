@@ -35,9 +35,16 @@ export default defineConfig({
                 manualChunks: undefined,
             },
         },
-        // PERBAIKAN: Pastikan assets dimuat dengan HTTPS
         assetsDir: 'assets',
     },
-    // PERBAIKAN: Base URL untuk production
-    base: process.env.NODE_ENV === 'production' ? 'https://election-app-production.up.railway.app/' : '/',
+    // Hapus base configuration - biarkan Laravel handle
+    experimental: {
+        renderBuiltUrl(filename, { hostType }) {
+            if (hostType === 'js') {
+                return `https://election-app-production.up.railway.app/build/${filename}`;
+            } else {
+                return { relative: true };
+            }
+        }
+    }
 });

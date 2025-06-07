@@ -9,6 +9,7 @@ class TrustProxies extends Middleware
 {
     /**
      * The trusted proxies for this application.
+     * Railway uses dynamic proxy IPs, so we trust all
      *
      * @var array|string|null
      */
@@ -16,6 +17,7 @@ class TrustProxies extends Middleware
 
     /**
      * The headers that should be used to detect proxies.
+     * Railway provides all standard forwarded headers
      *
      * @var int
      */
@@ -24,5 +26,6 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_HOST |
         Request::HEADER_X_FORWARDED_PORT |
         Request::HEADER_X_FORWARDED_PROTO |
+        Request::HEADER_X_FORWARDED_PREFIX |
         Request::HEADER_X_FORWARDED_AWS_ELB;
 }

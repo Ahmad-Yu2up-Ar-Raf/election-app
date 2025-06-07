@@ -1,5 +1,8 @@
 <?php
-
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\ForceHttps;
 return [
     'port' => env('PORT', 8000),
     'name' => env('APP_NAME', 'Laravel'),
@@ -29,3 +32,18 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 ];
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+            ForceHttps::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        //
+    })->create();
