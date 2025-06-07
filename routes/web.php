@@ -9,9 +9,28 @@ use App\Http\Controllers\VoteController;
 // use App\Models\Election;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+
+
+
+// Healthcheck route untuk Railway
 Route::get('/health', function () {
-    return response()->json(['status' => 'ok']);
+    return response()->json([
+        'status' => 'ok',
+        'timestamp' => now(),
+        'app' => config('app.name')
+    ]);
 });
+
+// Healthcheck alternatif
+Route::get('/up', function () {
+    return response('OK', 200);
+});
+
+
+
+// Route lainnya...
+
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
