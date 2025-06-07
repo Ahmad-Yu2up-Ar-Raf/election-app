@@ -52,7 +52,7 @@ return [
     |
     */
 
-'url' => env('APP_URL', ['https://election-app-production.up.railway.app',  'http://localhost']),
+'url' => env('APP_URL', 'https://election-app-production.up.railway.app'),
 'asset_url' => env('ASSET_URL', null),
 'force_https' => env('FORCE_HTTPS', true),
 
