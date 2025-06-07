@@ -14,6 +14,7 @@ return new class extends Migration
   public function down(): void
     {
         Schema::table('calon', function (Blueprint $table) {
+            
           $table->foreignId('election_id')->nullable()->constrained('elections')->onDelete('cascade');
         });
     }

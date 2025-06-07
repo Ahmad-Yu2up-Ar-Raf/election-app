@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('misi')->nullable();
             $table->string('picture')->nullable();
             $table->string('kelas', 10)->nullable();
-           $table->foreignId('election_id')->nullable()->constrained('elections')->onDelete('cascade');
+      
         });
     }
 
