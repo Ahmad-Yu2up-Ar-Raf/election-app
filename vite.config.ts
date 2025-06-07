@@ -28,14 +28,16 @@ export default defineConfig({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
-    build: {
+
+        build: {
+        outDir: 'public/build',
+        emptyOutDir: true,
         manifest: true,
         rollupOptions: {
             output: {
                 manualChunks: undefined,
             },
         },
-        assetsDir: 'assets',
     },
     // Hapus base configuration - biarkan Laravel handle
     experimental: {

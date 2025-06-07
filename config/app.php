@@ -11,7 +11,7 @@ return [
     
     // PERBAIKAN: URL harus string, bukan array
     'url' => env('APP_URL', 'https://election-app-production.up.railway.app'),
-    'asset_url' => env('ASSET_URL', null),
+   'asset_url' => env('APP_URL'),
     
     // PERBAIKAN: Force HTTPS hanya di production
     'force_https' => env('APP_ENV') === 'production',
