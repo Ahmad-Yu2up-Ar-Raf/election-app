@@ -11,6 +11,11 @@ import { Toaster } from "./components/ui/fragments/sonner"
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+
+configureEcho({
+    broadcaster: 'reverb',
+});
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
