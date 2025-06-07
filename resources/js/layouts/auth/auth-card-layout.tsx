@@ -1,6 +1,7 @@
 import AppLogoIcon from '@/components/ui/app-logo-icon';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/fragments/card';
 import { Link } from '@inertiajs/react';
+import { Box, Package } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 
 export default function AuthCardLayout({
@@ -17,7 +18,7 @@ export default function AuthCardLayout({
             <div className="flex w-full max-w-md flex-col gap-6">
                 <Link href={route('home')} className="flex items-center gap-2 self-center font-medium">
                     <div className="flex h-9 w-9 items-center justify-center">
-                        <AppLogoIcon className="size-9 fill-current text-black dark:text-white" />
+                        <Package className="size-9  text-black dark:text-white" />
                     </div>
                 </Link>
 

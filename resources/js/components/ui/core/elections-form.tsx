@@ -16,26 +16,26 @@ import {
   FormMessage,
 } from "@/components/ui/fragments/form";
 import { Input } from "@/components/ui/fragments/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/fragments/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/fragments/select";
 import { Textarea } from "@/components/ui/fragments/textarea";
-import PictureImageInput from "@/components/ui/core/file-uploud";
+// import PictureImageInput from "@/components/ui/core/file-uploud";
 import { cn } from "@/lib/utils";
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/fragments/popover";
-import { Button } from "../fragments/button";
-import { CalendarIcon, Check, Loader2 } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/fragments/command";
-import {
-  format
-} from "date-fns"
-import { Calendar } from "../fragments/calendar";
+// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/fragments/popover";
+// import { Button } from "../fragments/button";
+// import { CalendarIcon, Check, Loader2 } from "lucide-react";
+// import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/fragments/command";
+// import {
+//   format
+// } from "date-fns"
+// import { Calendar } from "../fragments/calendar";
 import { SmartDatetimeInput } from "../fragments/smart-date-time";
 interface TaskFormProps<T extends FieldValues>
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
@@ -139,8 +139,7 @@ const gender: string[] = [
                 <FormControl>
                   <SmartDatetimeInput
                     value={field.value}
-                        locale={id}
-                    hour12
+                      
                     onValueChange={field.onChange}
                     placeholder="e.g. Tomorrow morning 9am"
                
@@ -163,8 +162,7 @@ const gender: string[] = [
                   <SmartDatetimeInput
                     value={field.value}
                     onValueChange={field.onChange}
-                      locale={id}
-                    hour12
+                     
                     placeholder="e.g. Tomorrow morning 9am"
          
                     

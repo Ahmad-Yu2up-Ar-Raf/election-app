@@ -539,7 +539,6 @@ const NaturalLanguageInput = React.forwardRef<
       value={inputValue}
       onChange={(e) => setInputValue(e.currentTarget.value)}
       onKeyDown={handleKeydown}
-     readOnly
       onBlur={handleParse}
       className={cn("px-2 mr-0.5 flex-1 border-none h-8 rounded", inputBase)}
       {...props}
@@ -604,7 +603,6 @@ const DateTimeLocalInput = ({
           <Calendar
             disabled={disabled}
             {...props}
-            
             id={"calendar"}
             className={cn("peer flex justify-end", inputBase, className)}
             mode="single"

@@ -95,7 +95,7 @@ function BentoGrid({ items }: BentoGridProps) {
   const transformedItems = useMemo(() => {
         return items.map((item, index) => {
             const iconIndex = Math.abs(index) % ICONS.length;
-            const hasLargeVoters = (item.status || "finished") == "finished";
+            const hasLargeVoters = index == 0;
             
             return {
                 ...item,

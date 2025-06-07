@@ -99,7 +99,7 @@ export const columns: ColumnDef<CalonType>[] = [
     accessorKey: "Election",
     header: "Election",
     cell: ({ row }) => (
-      <div className="w-50">
+      <div className="w-40">
     
         {row.original.elections?.title}
      
@@ -115,7 +115,7 @@ export const columns: ColumnDef<CalonType>[] = [
     cell: ({ row }) => {
 
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex w-32 items-center gap-2">
 
           <span>{row.original.votes_count}</span>
         </div>

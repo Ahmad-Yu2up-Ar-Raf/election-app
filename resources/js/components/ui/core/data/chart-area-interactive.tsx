@@ -174,34 +174,10 @@ export function ChartAreaInteractive({
           <span className="@[540px]/card:hidden">Voting activity</span>
         </CardDescription>
         <CardAction className="flex flex-col gap-2">
-          {/* Chart Type Selector */}
-          <ToggleGroup
-            type="single"
-            value={viewType}
-            onValueChange={(value) => value && setViewType(value as any)}
-            variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-3 @[767px]/card:flex"
-          >
-            <ToggleGroupItem value="total" >Total</ToggleGroupItem>
-            <ToggleGroupItem value="by-candidate">By Candidate</ToggleGroupItem>
-            <ToggleGroupItem value="by-election">By Election</ToggleGroupItem>
-          </ToggleGroup>
+     
           
-          {/* Time Range Selector */}
-          <ToggleGroup
-            type="single"
-            value={timeRange}
-            onValueChange={setTimeRange}
-            variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
-          >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
-          </ToggleGroup>
-          
-          {/* Mobile Selectors */}
-          <div className="flex gap-2 @[767px]/card:hidden">
+
+          <div className="flex gap-5">
             <Select value={viewType} onValueChange={(value) => setViewType(value as any)}>
               <SelectTrigger className="flex w-32" size="sm">
                 <SelectValue />

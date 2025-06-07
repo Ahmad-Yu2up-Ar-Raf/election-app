@@ -115,6 +115,24 @@ export const columns: ColumnDef<Elections>[] = [
     },
   },
   {
+    accessorKey: "candidate",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="candidate" />
+    ),
+    cell: ({ row }) => {
+
+      return (
+        <div className="flex items-center gap-2">
+
+          <span>{row.original.candidates_count}</span>
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
     accessorKey: "start_date",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="start_date" />

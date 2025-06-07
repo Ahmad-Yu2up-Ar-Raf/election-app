@@ -89,7 +89,7 @@ const handleVote = () => {
       <ButtonHover12 
               onClick={handleVote} 
             disabled={isVoting}
-            className=' px-5  mt-5 '
+            className=' px-5  mt-5  w-[9em]'
             >
               {isVoting ? 'Processing...' : 'Vote Now'}
             </ButtonHover12>
