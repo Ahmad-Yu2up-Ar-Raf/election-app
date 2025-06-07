@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import laravel from 'laravel-vite-plugin';
-
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -14,13 +14,12 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
-    build: {
-        outDir: 'public/build',
-        emptyOutDir: true,
-        manifest: true,
+    esbuild: {
+        jsx: 'automatic',
     },
-    server: {
-        host: true,
-        hmr: { port: 8080, host: process.env.VITE_APP_URL || 'localhost' },
+    resolve: {
+        alias: {
+            'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
+        },
     },
 });
