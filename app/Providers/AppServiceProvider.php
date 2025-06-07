@@ -17,11 +17,15 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-  public function boot()
-    {
-        // Force HTTPS di production
-        if (config('app.env') === 'production') {
-            URL::forceScheme('https');
-        }
+public function boot()
+{
+    if (env('FORCE_HTTPS', false)) {
+        URL::forceScheme('https');
     }
+    
+    // Atau bisa juga pakai ini
+    if (request()->header('x-forwarded-proto') == 'https') {
+        URL::forceScheme('https');
+    }
+}
 }

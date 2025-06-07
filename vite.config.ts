@@ -17,8 +17,11 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
-       server: {
-        https: process.env.NODE_ENV === 'production',
+    server: {
+        // Fix the https configuration
+        https: process.env.NODE_ENV === 'production' ? {
+            // Add HTTPS options here if needed
+        } : false,
         host: true,
     },
     resolve: {
