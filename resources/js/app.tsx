@@ -4,7 +4,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
-import { configureEcho } from '@laravel/echo-react';
+// import { configureEcho } from '@laravel/echo-react';
 import { Toaster } from "./components/ui/fragments/sonner"
 
 
@@ -12,9 +12,9 @@ import { Toaster } from "./components/ui/fragments/sonner"
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 
-configureEcho({
-    broadcaster: 'reverb',
-});
+// configureEcho({
+//     broadcaster: 'reverb',
+// });
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
