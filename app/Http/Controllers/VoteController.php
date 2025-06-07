@@ -106,7 +106,7 @@ class VoteController extends Controller
             ]);
  $vote->load('calon');
         // broadcast(new VoteCreatedEvent($vote))->toOthers();
-        event(new VoteCreatedEvent($vote));
+    
              return redirect()->route('vote.index')->with('success', 'Data Insert successfully!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
