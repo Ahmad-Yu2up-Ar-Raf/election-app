@@ -41,7 +41,7 @@ onSubmit
            name={"name" as FieldPath<T>}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Full Name</FormLabel>
               <FormControl>
                 <Input
                 placeholder="name"
