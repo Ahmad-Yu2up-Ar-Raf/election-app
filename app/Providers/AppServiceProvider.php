@@ -16,11 +16,6 @@ public function boot(): void
     }
     
     // Create storage link if not exists
-    if (!file_exists(public_path('storage'))) {
-        $this->app->make('files')->link(
-            storage_path('app/public'), 
-            public_path('storage')
-        );
-    }
+
 }
 }
