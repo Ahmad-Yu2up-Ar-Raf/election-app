@@ -182,7 +182,7 @@ return [
     |
     */
 
-    'http_only' => env('SESSION_HTTP_ONLY', true),
+  'force_https' => env('FORCE_HTTPS', true),
 
     /*
     |--------------------------------------------------------------------------

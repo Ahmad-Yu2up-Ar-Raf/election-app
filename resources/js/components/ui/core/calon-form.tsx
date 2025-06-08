@@ -54,7 +54,7 @@ export function TaskForm<T extends FieldValues>({
 }: TaskFormProps<T>) {
 
 
-   console.log("Current Employee:", elections);
+
 
 
 const status: string[] = [
@@ -73,7 +73,6 @@ const gender: string[] = [
 ]
 
 
-console.log(elections)
 
   return (
     <Form {...form}>

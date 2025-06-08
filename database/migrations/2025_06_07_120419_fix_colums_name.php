@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('votes', function (Blueprint $table) {
-             $table->foreignId('election_id')->constrained('elections')->onDelete('cascade');
+                    if (!Schema::hasColumn('votes', 'election_id')) { 
+
+                        $table->foreignId('election_id')->constrained('elections')->onDelete('cascade');
+                    }
         });
     }
 
@@ -22,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('votes', function (Blueprint $table) {
-            $table->foreignId('election_id')->constrained('elections')->onDelete('cascade');
+            $table->foreignId('elections_id')->constrained('elections')->onDelete('cascade');
         });
     }
 };

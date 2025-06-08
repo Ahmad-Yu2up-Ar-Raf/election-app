@@ -14,7 +14,6 @@ use Inertia\Inertia;
 
 
 
-
 // Route lainnya...
 
 Route::get('/', function () {

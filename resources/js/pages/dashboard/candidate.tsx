@@ -64,7 +64,7 @@ export default function Page({ pagination, filters, flash, calon , elections}: E
                     <div className="@container/main flex flex-1 flex-col gap-2">
                 
           
-                        <div className="flex flex-col px-7 gap-4 py-4 md:gap-6 md:py-6">
+                        <div className="flex flex-col px-5 gap-4 py-4 md:gap-6 md:py-6">
 
 
             <header className="flex items-center justify-between space-y-1">

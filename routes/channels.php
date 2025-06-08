@@ -7,10 +7,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 // Channel untuk votes
-Broadcast::channel('votes', function () {
-    return true; // Mengizinkan semua user untuk subscribe ke channel ini
-});
-
-Broadcast::channel('election.{electionId}', function ($user, $electionId) {
-    return true; // Atau bisa ditambahkan logic untuk membatasi akses
-});
+// Broadcast::channel('votes', function ($user) {
+//     return $user !== null;
+// });

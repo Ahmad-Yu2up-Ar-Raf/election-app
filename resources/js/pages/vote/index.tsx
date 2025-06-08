@@ -88,7 +88,7 @@ console.log(elections)
       </Head>
       {elections.length > 0 ? (
 
-      <section className="min-h-screen relative space-y-18 pt-20 h-full">
+      <section className="min-h-dvh relative space-y-18 pt-20 h-full">
            <Spotlight
         className="-top-20 left-0 md:-top-32 md:left-60"
         fill="white"
@@ -119,7 +119,7 @@ console.log(elections)
 
       </section>
       ) : (
-            <div className="relative px-5 flex h-screen w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
+            <div className="relative px-5 flex h-dvh w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
               <div
                 className={cn(
                   "pointer-events-none absolute inset-0 [background-size:40px_40px] select-none",

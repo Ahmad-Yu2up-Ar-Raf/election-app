@@ -76,7 +76,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
       </Head>
-   <section className="relative content-center flex-col flex min-h-screen w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
+   <section className="relative content-center flex-col flex min-h-dvh w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
       <div
         className={cn(
           "pointer-events-none absolute inset-0 opacity-50 [background-size:40px_40px] select-none",
@@ -90,7 +90,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
       />
 
 
-      <section className="relative min-h-screen container content-center z-10 mx-auto w-full max-w-7xl p-4 pt-20 md:pt-0">
+      <section className="relative min-h-dvh container content-center z-10 mx-auto w-full max-w-7xl p-4 pt-20 md:pt-0">
          <BlurFade duration={1} direction={"up"} delay={1} inView>
 
         <h1 className="bg-opacity-50 bg-gradient-to-b m-auto max-w-[10em] from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl">
@@ -116,7 +116,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
 )}
       </section>
       
-            <section id='candidate' className='min-h-screen mt-30 py-30   h-full'>
+            <section id='candidate' className='min-h-dvh mt-30 py-30   h-full'>
         <main className='container gap-15 md:gap-17 max-w-[70em] mx-auto relative  flex flex-col items-center justify-center '>
  <header className='flex space-y-3  flex-col items-center justify-center px-4 py-2'>
     <BlurFade duration={1} direction={"up"} delay={0.5} inView>
@@ -150,7 +150,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
       </section>
  {election.status === 'finished' ? (
   <>
-    <section id='result' className='min-h-screen mt-30 py-30   h-full'>
+    <section id='result' className='min-h-dvh mt-30 py-30   h-full'>
         <main className='container gap-15 md:gap-17  mx-auto relative  flex flex-col items-center justify-center '>
  <header className='flex space-y-3  flex-col items-center justify-center px-4 py-2'>
     <BlurFade duration={1} direction={"up"} delay={0.5} inView>
@@ -177,7 +177,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
   </div>
         </main>
       </section>
-    <section id='winner' className='min-h-screen mt-30 py-30   h-full'>
+    <section id='winner' className='min-h-dvh mt-30 py-30   h-full'>
         <main className='container gap-15 md:gap-17  mx-auto relative  flex flex-col items-center justify-center '>
  <header className='flex space-y-3  flex-col items-center justify-center px-4 py-2'>
     <BlurFade duration={1} direction={"up"} delay={0.5} inView>
@@ -203,7 +203,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
       </section>
   </>
  ) : (
-   <section id='countdown' className='min-h-screen  content-center  h-full'>
+   <section id='countdown' className='min-h-dvh  content-center  h-full'>
    <BlurFade duration={1} direction={"up"} delay={0.5} inView>
 
      <Countdown targetDate={election.end_date} />

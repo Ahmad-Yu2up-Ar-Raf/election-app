@@ -49,8 +49,8 @@ onSubmit
                 type="text"
                 {...field} />
               </FormControl>
-              <FormDescription className=' sr-only'>This is your public display name.</FormDescription>
-              <FormMessage  className=' sr-only'/>
+              <FormDescription className=' sr-only '>This is your public display name.</FormDescription>
+              <FormMessage  className=' '/>
             </FormItem>
           )}
         />
@@ -69,8 +69,8 @@ onSubmit
                 type="email"
                 {...field} />
               </FormControl>
-              <FormDescription  className=' sr-only'>This is your email address.</FormDescription>
-              <FormMessage  className=' sr-only'/>
+              <FormDescription  className='  sr-only'>This is your email address.</FormDescription>
+              <FormMessage  className=' '/>
             </FormItem>
           )}
         />
@@ -85,8 +85,8 @@ onSubmit
               <FormControl>
                 <PasswordInput placeholder="Password" {...field} />
               </FormControl>
-              <FormDescription  className=' sr-only'>Enter your password.</FormDescription>
-              <FormMessage  className=' sr-only'/>
+              <FormDescription  className=' sr-only '>Enter your password.</FormDescription>
+              <FormMessage  className=' '/>
             </FormItem>
           )}
         />
@@ -100,8 +100,8 @@ onSubmit
               <FormControl>
                 <PasswordInput placeholder="Confirmation" {...field} />
               </FormControl>
-              <FormDescription  className=' sr-only'>Enter your password.</FormDescription>
-              <FormMessage  className=' sr-only'/>
+              <FormDescription  className='sr-only '>Enter your password.</FormDescription>
+              <FormMessage  className=' '/>
             </FormItem> 
           )}
         />

@@ -20,7 +20,7 @@ export default function Welcome( { }) {
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
-    <div className="relative px-5 content-center flex h-screen w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
+    <div className="relative px-5 content-center flex h-dvh w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
       <div
         className={cn(
           "pointer-events-none  absolute inset-0 [background-size:40px_40px] select-none",
@@ -39,7 +39,7 @@ export default function Welcome( { }) {
             </BlurFade>
         <BlurFade duration={1} direction={"up"} delay={1} inView className=' '>
             
-        <h1 className="bg-opacity-50 bg-gradient-to-b pb-2  from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl">
+        <h1 className="bg-opacity-50 bg-gradient-to-b pb-2    from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl">
             Electioneering
         </h1>
         </BlurFade>

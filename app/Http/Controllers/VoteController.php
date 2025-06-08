@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\VoteCreatedEvent;
+// use App\Events\VoteCreatedEvent;
+use App\Events\VoteRecorded;
 use App\Models\Vote;
 use App\Models\Calon;
 use App\Models\Election;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 
 class VoteController extends Controller
 {
@@ -105,7 +106,7 @@ class VoteController extends Controller
                 // 'user_id' => Auth::id(), // Uncomment jika menggunakan user authentication
             ]);
  $vote->load('calon');
-        // broadcast(new VoteCreatedEvent($vote))->toOthers();
+
     
              return redirect()->route('vote.index')->with('success', 'Data Insert successfully!');
 
