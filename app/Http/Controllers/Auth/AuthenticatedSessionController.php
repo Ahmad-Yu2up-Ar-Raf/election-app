@@ -33,7 +33,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard.admind.index', absolute: false));
+           return redirect()->intended(
+        route('dashboard.admind.index', [], true) // parameter ke-3 = true untuk force HTTPS
+    );
     }
 
     /**

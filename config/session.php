@@ -169,8 +169,8 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
 
+'secure' => env('SESSION_SECURE_COOKIE', true),
     /*
     |--------------------------------------------------------------------------
     | HTTP Access Only
@@ -181,8 +181,7 @@ return [
     | the HTTP protocol. It's unlikely you should disable this option.
     |
     */
-
-  'force_https' => env('FORCE_HTTPS', true),
+ 'http_only' => env('SESSION_HTTP_ONLY', true),
 
     /*
     |--------------------------------------------------------------------------
