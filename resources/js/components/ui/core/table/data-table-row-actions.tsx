@@ -40,7 +40,14 @@ export function DataTableRowActions<TData>({
   const [openCopy, setOpenCopy] = React.useState(false)
   const [openModal, setOpenModal] = React.useState(false)
   const [processing, setProcessing] = React.useState(false);
+  const handleOpen = (sasd : boolean) => { 
 
+      if (sasd) {
+            setOpenCopy(true)
+      }else {
+        toast.warning("your election is still not registered. there must be 2 candidates")
+      }
+  }
   const handleDelete = (taskId: number) => {
     try {
       setProcessing(true);
@@ -86,7 +93,7 @@ export function DataTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onSelect={() => setOpenUpdate(true)}>Edit</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setOpenCopy(true)}>
+          <DropdownMenuItem onSelect={() => handleOpen(task?.candidates_count! >= 2)}>
             Share
 
           </DropdownMenuItem>
@@ -102,12 +109,13 @@ export function DataTableRowActions<TData>({
                   open={openUpdate} 
                   onOpenChange={setOpenUpdate}
                 />
-           <CopyModal
+                {task?.candidates_count! >= 2 &&    <CopyModal
            trigger={false}
            students={task}
             open={openCopy}
             onOpenChange={setOpenCopy}
-           />
+           />}
+         
       <DeleteTasksDialog 
         handledeDelete={handleDelete}
         processing={processing}

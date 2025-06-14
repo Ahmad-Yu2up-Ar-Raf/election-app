@@ -30,7 +30,7 @@ class UpdateElectionStatus extends Command
         $updatedCount = 0;
 
         // Get semua elections yang bukan cancelled atau inactive
-        $elections = Election::whereNotIn('status', [
+        $elections = Election::withwhereNotIn('status', [
             ElectionsStatus::Cancelled,
             ElectionsStatus::Inactive
         ])->get();
@@ -38,6 +38,7 @@ class UpdateElectionStatus extends Command
         foreach ($elections as $election) {
             $startDate = Carbon::parse($election->start_date);
             $endDate = Carbon::parse($election->end_date);
+          
             $currentStatus = $election->status;
             $newStatus = null;
 
@@ -46,7 +47,7 @@ class UpdateElectionStatus extends Command
                 $newStatus = ElectionsStatus::Upcoming;
             } elseif ($now->gte($startDate) && $now->lt($endDate)) {
                 $newStatus = ElectionsStatus::Ongoing;
-            } elseif ($now->gte($endDate)) {
+            } elseif ($now->gte($endDate) ) {
                 $newStatus = ElectionsStatus::Finished;
             }
 
