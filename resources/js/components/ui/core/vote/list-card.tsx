@@ -4,7 +4,8 @@ import { CalonType, Elections } from '@/lib/schema';
 import ButtonHover12 from './vote-button';
 import { router } from '@inertiajs/react';
 import { toast } from 'sonner';
-
+import { DeleteTasksDialog } from '../confirmation-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 // Array warna yang bisa digunakan
 const COLORS = [
 
@@ -22,7 +23,7 @@ interface IndexProps {
 
 function CandidateCard({ Calon, election }: IndexProps) {
   const [isVoting, setIsVoting] = useState(false);
-  
+    const [openModal, setOpenModal] = React.useState(false)
   // Menggunakan ID calon untuk memilih warna agar konsisten
   const colorIndex = useMemo(() => {
     return Math.abs(Calon.id) % COLORS.length;
@@ -30,35 +31,49 @@ function CandidateCard({ Calon, election }: IndexProps) {
 
   const color = COLORS[colorIndex];
 
+  const [loading, setLoading] = React.useState(false);
 
 const handleVote = () => { 
-    if (election.status === 'ongoing') {
-           setIsVoting(true);
-    
-    router.post(route('vote.store', election.id), {
-      calon_id: Calon.id,
-      election_id: election.id
-    }, {
-      preserveScroll: true,
-      onSuccess: () => {
-        toast.success('Vote berhasil!');
-        router.visit(route('vote.index'));
-      },
-      onError: (errors) => {
-        toast.error(errors.message || 'Gagal melakukan vote');
-        setIsVoting(false);
-      },
-      onFinish: () => setIsVoting(false)
-    });
-    }
+ setLoading(true)
+        if (election.status === 'ongoing') {
+               setIsVoting(true);
+        
+        router.post(route('vote.store', election.id), {
+          calon_id: Calon.id,
+          election_id: election.id
+        }, {
+          preserveScroll: true,
+          onSuccess: () => {
+            toast.success('Vote berhasil!');
+            router.visit(route('vote.index'));
+          },
+          onError: (errors) => {
+            toast.error(errors.message || 'Gagal melakukan vote');
+            setIsVoting(false);
+          },
+          onFinish: () => {setIsVoting(false)
+             setLoading(false)
+          }
+        });
+        }
+   
  
+}
+
+
+const isMobile = useIsMobile()
+
+const handleMobile = () => { 
+if (isMobile) {
+  setOpenModal(true)
+}
 }
 
 
   return (
     <>
       <div 
-
+   onClick={() => handleMobile()}
         className='relative w-full max-w-xs h-[370px] overflow-hidden group mx-auto dark:bg-black bg-white dark:border-0 border rounded-lg dark:text-white text-black flex flex-col'
         style={{ borderColor: color.primary }}
       >
@@ -87,7 +102,7 @@ const handleVote = () => {
             { election.status === 'ongoing' && ( 
 
       <ButtonHover12 
-              onClick={handleVote} 
+                      onClick={() => setOpenModal(true)} 
             disabled={isVoting}
             className=' px-5  mt-5  w-[9em]'
             >
@@ -101,6 +116,14 @@ const handleVote = () => {
           <p className='sm:text-base text-sm'>{Calon.kelas}</p>
         </article>
       </div>
+       <DeleteTasksDialog
+       trigger={false}
+       processing={loading}
+            open={openModal}
+            onOpenChange={setOpenModal}
+            students={Calon}
+            handledeDelete={handleVote}
+            />
     </>
   );
 }

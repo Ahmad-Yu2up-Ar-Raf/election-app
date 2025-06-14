@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SlidingNumber } from '../fragments/sliding-number';
+import { EllipsisVertical } from 'lucide-react';
 
 interface type {
     targetDate: string
@@ -32,14 +33,22 @@ Object.keys(timeLeft).forEach((interval) => {
  return;
  }
 timerComponents.push(
-    <>
+    <div className=" flex  content-start items-start flex-row ">
+
+    <div className='  flex-col flex  items-center'>
      <SlidingNumber key={interval} value={timeLeft[interval]} padStart={true} />
  {/* {interval} */}
- {interval != "seconds" && (
 
-       <span className='text-zinc-500'>:</span>
+  <span className=' text-muted-foreground text-sm lg:text-base'>
+ {interval}
+    </span>
+    </div>
+    {interval != "seconds" && (
+
+      <EllipsisVertical  className='text-zinc-400 size-7 mt-4 mx-2  h-fit'/>
  )}
-    </>
+    
+    </div>
  );
  });
 return (

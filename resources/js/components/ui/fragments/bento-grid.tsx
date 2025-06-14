@@ -122,9 +122,7 @@ function BentoGrid({ items }: BentoGridProps) {
                 const isGanjil = index % 2 !== 0;
                 if(isMore)
                 return(
-                <BlurFade 
-                
-                direction={"up"} duration={2} delay={index * 1} inView   key={index}     className={cn(
+                <div  key={index}     className={cn(
                         "group relative p-4 rounded-xl overflow-hidden transition-all duration-300",
                         "border border-gray-100/80 dark:border-white/20 bg-white dark:bg-black",
                         "hover:shadow-[0_2px_12px_rgba(0,0,0,0.03)] cursor-pointer dark:hover:shadow-[0_2px_12px_rgba(255,255,255,0.03)]",
@@ -222,7 +220,7 @@ function BentoGrid({ items }: BentoGridProps) {
                                 : "opacity-0 group-hover:opacity-100"
                         } transition-opacity duration-300`}
                     />
-                               </BlurFade>
+                               </div>
                 )
 })}
         </div>

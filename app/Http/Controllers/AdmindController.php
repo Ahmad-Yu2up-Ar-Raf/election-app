@@ -18,16 +18,25 @@ class AdmindController extends Controller
     {
         $perPage = $request->input('perPage', 10);
     $user = Auth::User();
-        $query = Calon::where('user_id', Auth::id())->orWhere('user_id',  $user->team_id);
+        $filter = $request->input('filter');
+         $search = $request->input('search');
+        $query = Calon::where(function($q) use ($user) {
+            $q->where('user_id', Auth::id());
+            if ($user->team_id) {
+                $q->orWhere('user_id', $user->team_id);
+            }
+        });
 
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where(function($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('kelas', 'like', "%{$search}%");
-            });
-        }
-
+       if ($search) {
+    $query->where(function($q) use ($search) {
+        $searchLower = strtolower($search);
+        $q->whereRaw('LOWER(nama) LIKE ?', ["%{$searchLower}%"])
+          ->orWhereRaw('LOWER(kelas) LIKE ?', ["%{$searchLower}%"]);
+    });
+}
+ if ($filter) {
+        $query->where('status', request('filter') === 'active' ? 'active' : 'inactive');
+    }
         $admind = $query->orderBy('created_at', 'desc')
             ->with(['votes' => function($query) {
                 $query->orderBy('created_at', 'desc');

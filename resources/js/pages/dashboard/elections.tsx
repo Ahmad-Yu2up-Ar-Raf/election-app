@@ -45,7 +45,7 @@ interface ElectionsPageProps {
 export default function Page({ pagination, filters, flash, elections }: ElectionsPageProps) {
 
 
-    console.log("elections", elections);
+    
     
     return (
         <SidebarProvider

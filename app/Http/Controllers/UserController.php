@@ -23,10 +23,13 @@ class UserController extends Controller
 
     $query = User::query()->where('team_id', Auth::id())->orderBy('created_at', 'desc');
 
-    if ($search) {
-        $query->where('name', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%");
-        }
+   if ($search) {
+    $query->where(function($q) use ($search) {
+        $searchLower = strtolower($search);
+        $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchLower}%"])
+          ->orWhereRaw('LOWER(email) LIKE ?', ["%{$searchLower}%"]);
+    });
+}
 
         if ($filter) {
             $query->where('status', $filter);

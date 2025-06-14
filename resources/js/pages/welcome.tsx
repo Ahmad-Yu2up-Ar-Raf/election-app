@@ -29,7 +29,7 @@ export default function Welcome( { }) {
       />
  
       <Spotlight
-        className="-top-40 left-0 md:-top-20 md:left-60"
+        className="-top-40   -left-20 md:-top-20 md:left-60"
         fill="white"
       />
       <div className="relative h-full content-center z-10 mx-auto w-full max-w-7xl p-4 md:pt-0">

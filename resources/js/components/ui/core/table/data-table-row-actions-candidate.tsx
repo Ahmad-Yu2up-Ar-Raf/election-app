@@ -36,12 +36,13 @@ export function DataTableRowActions<TData>({
   const [openUpdate, setOpenUpdate] = React.useState(false)
   const [openModal, setOpenModal] = React.useState(false)
   const [processing, setProcessing] = React.useState(false);
-
+const currentPath = window.location.pathname;
+          const pathNames = currentPath.split('/').filter(path => path)[1]
   const handleDelete = (taskId: number) => {
     try {
       setProcessing(true);
       
-      router.delete(route('dashboard.candidate.destroy', taskId), {
+      router.delete(route(`dashboard.${pathNames}.destroy`, taskId), {
         preserveScroll: true,
         preserveState: true,
         onBefore: () => {

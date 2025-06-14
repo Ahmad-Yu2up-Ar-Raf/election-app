@@ -13,30 +13,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 configureEcho({
     broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    enabledTransports: ['ws', 'wss'],
-    
-    // Additional configuration for better connection handling
-    cluster: import.meta.env.VITE_REVERB_CLUSTER ?? 'mt1',
-    enableStats: false,
-    enableLogging: import.meta.env.DEV,
-    
-    // Connection options
-    authEndpoint: '/broadcasting/auth',
-    auth: {
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-        },
-    },
-    
- 
-    activityTimeout: 120000,
-    pongTimeout: 30000,
-    unavailableTimeout: 10000,
+
 });
 
 createInertiaApp({

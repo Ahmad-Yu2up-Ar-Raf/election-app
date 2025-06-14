@@ -61,13 +61,13 @@ export function DeleteTasksDialog({
   // Use controlled state if props are provided, otherwise use internal state
   const isOpen = onOpenChange ? open : internalOpen;
   const setIsOpen = onOpenChange || setInternalOpen;
-  const isDesktop = useIsMobile;
+  const isDesktop = useIsMobile();
 
 
 
 
 
-  if (!isDesktop ) {
+  if (isDesktop ) {
     return (
         <Drawer modal={true} {...props} open={isOpen} onOpenChange={setIsOpen} >
   

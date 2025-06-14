@@ -88,7 +88,7 @@ console.log(elections)
       </Head>
       {elections.length > 0 ? (
 
-      <section className="min-h-dvh relative space-y-18 pt-20 h-full">
+      <section className="min-h-dvh overflow-x-hidden relative space-y-18 pt-20 h-full">
            <Spotlight
         className="-top-20 left-0 md:-top-32 md:left-60"
         fill="white"
@@ -115,7 +115,13 @@ console.log(elections)
      
               </BlurFade>
         </header>
-        { AnimationComplete &&  <BentoGrid items={elections} />}
+        { AnimationComplete && 
+         <BlurFade  
+         
+          direction={"up"} duration={2} delay={0.1} inView 
+         >
+          <BentoGrid items={elections} />
+          </BlurFade>}
 
       </section>
       ) : (

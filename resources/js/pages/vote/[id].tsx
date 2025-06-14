@@ -85,7 +85,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
       />
  
       <Spotlight
-        className="-top-20 left-0 md:-top-72 md:left-60"
+        className="-top-80 -left-30 md:-top-72 md:left-60"
         fill="white"
       />
 
@@ -106,7 +106,7 @@ export default function VoteDetail({ election, candidates, votes, largest }: Vot
         </p>
 </BlurFade>
 {  !isFinnished && ( 
-   <BlurFade duration={1 } delay={3} direction={"up"} inView  className=" flex hover:bg-muted-foreground/25 justify-center border-2 border-accent-foreground/30  pt-1.5  rounded-full  transform -translate-x-1/2 left-1/2  absolute  bottom-7" >
+   <BlurFade duration={1 } delay={3} direction={"up"} inView  className=" flex hover:bg-muted-foreground/25 justify-center border border-accent-foreground/15  pt-1.5  rounded-full  transform -translate-x-1/2 left-1/2  absolute  bottom-7" >
 
   <a href='#candidate' >
 

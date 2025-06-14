@@ -36,32 +36,25 @@ export function DataTableToolbar<TData>({
 
  const currentPath = window.location.pathname;
           const pathNames = currentPath.split('/').filter(path => path)[1]
-
+     const [completionFilter, setCompletionFilter] = React.useState<string>(filters.filter as string);
 const [searchTerm, setSearchTerm] = React.useState(filters.search);
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        router.get(route(`dashboard.${pathNames}.index`), {
-            search: searchTerm,
+
+    const debouncedSearch = React.useMemo(
+    () =>
+      debounce((search: string) => {
+        router.get(
+          route(`dashboard.${pathNames}.index`),
+          { 
             
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-        [pathNames]
-    };
-
-      const debouncedSearch = React.useMemo(
-        () =>
-          debounce((search: string) => {
-            router.get(
-              route(`dashboard.${pathNames}.index`),
-              { search,  },
-              { preserveState: true, preserveScroll: true }
-            );
-          }, 300),
-        [searchTerm, pathNames]
-      );
-
+            search,
+            filter: completionFilter,// Tambahkan ini
+            perPage: table.getState().pagination.pageSize // Dan ini jika perlu
+          },
+          { preserveState: true, preserveScroll: true }
+        );
+      }, 300),
+    [pathNames, completionFilter] // Update dependencies
+);
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center gap-2">
@@ -77,9 +70,12 @@ const [searchTerm, setSearchTerm] = React.useState(filters.search);
         />
         {table.getColumn("status") && (
           <DataTableFacetedFilter
+          searchTerm={searchTerm}
             column={table.getColumn("status")}
             title="Status"
             options={option}
+            filters={filters}
+            setCompletionFilter={setCompletionFilter}
           />
         )}
         {/* {table.getColumn("priority") && (

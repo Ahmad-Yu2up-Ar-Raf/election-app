@@ -1,7 +1,7 @@
 "use client"
 
 import { Row } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import {  MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/fragments/button"
 import {
@@ -15,13 +15,19 @@ import {
 } from "@/components/ui/fragments/dropdown-menu"
 
 
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/fragments/tooltip"
 import { DeleteTasksDialog } from "../delete-tasks-dialog"
+
 import { Elections } from "@/lib/schema"
 import React from "react"
 import { router } from "@inertiajs/react"
 import { toast } from "sonner"
 import { UpdateTaskSheet } from "../elections-update-sheet"
+import CopyModal from "../copyModal"
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
@@ -31,6 +37,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const task = row.original as Elections;
   const [openUpdate, setOpenUpdate] = React.useState(false)
+  const [openCopy, setOpenCopy] = React.useState(false)
   const [openModal, setOpenModal] = React.useState(false)
   const [processing, setProcessing] = React.useState(false);
 
@@ -79,6 +86,10 @@ export function DataTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onSelect={() => setOpenUpdate(true)}>Edit</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setOpenCopy(true)}>
+            Share
+
+          </DropdownMenuItem>
           <DropdownMenuItem variant="destructive" onSelect={() => setOpenModal(true)}>
             Delete
             <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
@@ -91,6 +102,12 @@ export function DataTableRowActions<TData>({
                   open={openUpdate} 
                   onOpenChange={setOpenUpdate}
                 />
+           <CopyModal
+           trigger={false}
+           students={task}
+            open={openCopy}
+            onOpenChange={setOpenCopy}
+           />
       <DeleteTasksDialog 
         handledeDelete={handleDelete}
         processing={processing}

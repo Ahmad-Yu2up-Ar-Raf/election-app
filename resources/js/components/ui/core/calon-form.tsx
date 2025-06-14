@@ -168,6 +168,7 @@ const gender: string[] = [
                                    <CommandItem
                                      value={elections.title || `elections ${elections.id}`}
                                      key={elections.id}
+                                     className=" cursor-pointer"
                                      onSelect={() => {
                                        form.setValue("election_id" as FieldPath<T>,  elections.id as any);
                                      }}

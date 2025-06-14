@@ -12,52 +12,58 @@ class ElectionsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        $perPage = $request->input('perPage', 10);
-        $search = $request->input('search');
-        $filter = $request->input('filter');
-         $user = Auth::User();
-        $query = Election::query()
-            ->where('user_id', Auth::id())->orWhere('user_id',  $user->team_id)
-           
-            ->with('candidates')
-            ->withCount('candidates')
-            ->with('voters')
-            ->withCount('voters')
-            ->orderBy('created_at', 'desc');
+public function index(Request $request)
+{
+    $perPage = $request->input('perPage', 10);
+    $search = $request->input('search');
+    $filter = $request->input('filter');
+    $user = Auth::user();
+    
+    $query = Election::query()
+        ->where(function($q) use ($user) {
+            $q->where('user_id', Auth::id());
+            if ($user->team_id) {
+                $q->orWhere('user_id', $user->team_id);
+            }
+        })
+        ->with('candidates')
+        ->withCount('candidates')
+        ->with('voters')
+        ->withCount('voters')
+        ->orderBy('created_at', 'desc');
 
-        if ($search) {
-            $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-        }
-
-        if ($filter) {
-            $query->where('status', $filter);
-        }
-
-        $elections = $query->paginate($perPage);
-
-        // Update status untuk setiap election sebelum menampilkan
-        $elections->getCollection()->each(function ($election) {
-            $election->updateStatusBasedOnDate();
-        });
-
-        return Inertia::render('dashboard/elections', [
-            'elections' => $elections->items(),
-            'pagination' => [
-                'currentPage' => $elections->currentPage(),
-                'perPage' => $elections->perPage(),
-                'lastPage' => $elections->lastPage(),
-                'total' => $elections->total(),
-            ],
-            'filters' => [
-                'search' => $search,
-                'filter' => $filter,
-            ],
-        ]);
+  if ($search) {
+    $query->where(function($q) use ($search) {
+        $searchLower = strtolower($search);
+        $q->whereRaw('LOWER(title) LIKE ?', ["%{$searchLower}%"])
+          ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchLower}%"]);
+    });
+}
+    if ($filter) {
+        $query->where('status', $filter);
     }
 
+    $elections = $query->paginate($perPage);
+
+    // Update status untuk setiap election sebelum menampilkan
+    $elections->getCollection()->each(function ($election) {
+        $election->updateStatusBasedOnDate();
+    });
+
+    return Inertia::render('dashboard/elections', [
+        'elections' => $elections->items(),
+        'pagination' => [
+            'currentPage' => $elections->currentPage(),
+            'perPage' => $elections->perPage(),
+            'lastPage' => $elections->lastPage(),
+            'total' => $elections->total(),
+        ],
+        'filters' => [
+            'search' => $search,
+            'filter' => $filter,
+        ],
+    ]);
+}
     /**
      * Show the form for creating a new resource.
      */
