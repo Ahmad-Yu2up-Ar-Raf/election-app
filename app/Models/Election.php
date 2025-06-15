@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\ElectionsStatus;
-use App\Status;
+
 use App\Visibility;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

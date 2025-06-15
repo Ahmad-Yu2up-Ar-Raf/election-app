@@ -13,7 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('elections', function (Blueprint $table) {
-            $table->string('visibility')->default(Visibility::Public->value);
+                     if (!Schema::hasColumn('elections', 'visibility')) { 
+
+                         $table->string('visibility')->default(Visibility::Public->value);
+                      }
         });
     }
 
