@@ -11,6 +11,7 @@ export interface CalonType {
     id: number;
     nama: string;
     gender: "male" | "female";
+
     status: 'active' | "inactive" | "pending" | "disqualified" | "rejected" | "approved" | "suspended" | "qualified";
     visi: string;
     misi: string;
@@ -39,6 +40,7 @@ export interface Elections {
     capacity: number;
     candidates_count?: number;
     candidates?: CalonType[];
+        visibility: "public" | "private";
 }
 
 // Interface untuk data chart

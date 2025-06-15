@@ -10,6 +10,7 @@ import { statuses } from "@/data/data"
 import { Elections } from "@/lib/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
+import { Eye, EyeClosed, EyeOff } from "lucide-react"
 
 export const columns: ColumnDef<Elections>[] = [
  {
@@ -70,6 +71,32 @@ export const columns: ColumnDef<Elections>[] = [
           <IconLoader />
         )}
         {row.original.status}
+      </Badge>
+       </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "visibility",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Visibility" />
+    ),
+    cell: ({ row }) => {
+
+
+      return (
+       <div className=" w-32">
+
+      <Badge variant="outline" className="text-muted-foreground px-1.5">
+        {row.original.visibility === "private" ? (
+          <EyeOff />
+        ) : (
+          <Eye/>
+        )}
+        {row.original.visibility}
       </Badge>
        </div>
       )

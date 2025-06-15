@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 // } from "date-fns"
 // import { Calendar } from "../fragments/calendar";
 import { SmartDatetimeInput } from "../fragments/smart-date-time";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../fragments/select";
 interface TaskFormProps<T extends FieldValues>
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
   children: React.ReactNode;
@@ -44,13 +45,13 @@ interface TaskFormProps<T extends FieldValues>
   onSubmit: (data: T) => void;
   isPending: boolean;
   currentEmployee?: Elections;
-  isUpdate: boolean
+
 }
 
 export function TaskForm<T extends FieldValues>({
   form,
   onSubmit,
-   isUpdate,
+   
   children,
   currentEmployee,
   isPending,
@@ -60,19 +61,7 @@ export function TaskForm<T extends FieldValues>({
    
 
 
-const status: string[] = [
-    'ongoing',
-    "finished", 
- "cancelled",
-    'upcoming',
-   'inactive'
-]
 
-
-const gender: string[] = [ 
-    "male",
-    "female"
-]
 
 
   return (
@@ -213,13 +202,13 @@ const gender: string[] = [
 
        
 
-              {/* <FormField
+              <FormField
                 control={form.control}
-                name={"status" as FieldPath<T>}
-                               defaultValue={currentEmployee?.status as any || ""}
+                name={"visibility" as FieldPath<T>}
+                               defaultValue={currentEmployee?.visibility as any || ""}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={cn(isPending && "text-muted-foreground")}>Status</FormLabel>
+                    <FormLabel className={cn(isPending && "text-muted-foreground")}>visibility</FormLabel>
                     <Select 
                       onValueChange={field.onChange} 
                       value={field.value || ""}
@@ -227,26 +216,33 @@ const gender: string[] = [
                     >
                       <FormControl>
                         <SelectTrigger className="capitalize w-full">
-                          <SelectValue placeholder="Select Status" />
+                          <SelectValue placeholder="Select visibility" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {status.map((item) => (
+                       
                           <SelectItem
-                            key={item}
-                            value={item}
+                            key={"Public"}
+                            value={"public"}
                             className="capitalize"
                           >
-                            {item}
+                            Public
                           </SelectItem>
-                        ))}
+                          <SelectItem
+                            key={"Private"}
+                            value={"private"}
+                            className="capitalize"
+                          >
+                            Private
+                          </SelectItem>
+                       
                       </SelectContent>
                     </Select>
-                    <FormDescription className="sr-only">Student status</FormDescription>
+                    <FormDescription className="sr-only">Student visibility</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
-              /> */}
+              />
 
      
       

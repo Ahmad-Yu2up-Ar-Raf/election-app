@@ -51,7 +51,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
       end_date: task?.end_date ? new Date(task.end_date) : new Date(),
       description: task?.description || '',
       status: task?.status || 'active',
-  
+     visibility: task?.visibility || "public"
     },
   });
 
@@ -65,6 +65,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
       end_date: task?.end_date ? new Date(task.end_date) : new Date(),
       description: task?.description || '',
       status: task?.status || 'active',
+      visibility: task?.visibility || "public"
       });
     }
   }, [task, form]);
@@ -89,7 +90,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
     formData.append('start_date', input.start_date!.toISOString());
     formData.append('end_date', input.end_date!.toISOString());
     formData.append('status', input.status || "active");
-
+   formData.append('visibility', input.visibility || "public");
 
     if (input.description) {
       formData.append('description', input.description);

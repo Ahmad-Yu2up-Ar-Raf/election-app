@@ -99,7 +99,7 @@ export const calonUpdateSchema = z.object({
 
 export const electionCreateSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  // status: z.string().optional(),
+  visibility: z.string().optional(),
   description: z.string().optional(),
  start_date: z.unknown(),
    end_date: z.unknown(),
@@ -110,6 +110,7 @@ export  const Updateelections = z.object({
   title: z.string().min(1, "Title is required").optional(),
   status: z.string().optional(),
   start_date: z.unknown(),
+  visibility: z.string().optional(),
    end_date: z.unknown(),
   description: z.string().optional(),
   capacity: z.coerce.number().int().min(1, "Capacity must be at least 1").optional(),

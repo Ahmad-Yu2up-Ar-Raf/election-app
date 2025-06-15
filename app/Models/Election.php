@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\ElectionsStatus;
 use App\Status;
+use App\Visibility;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,12 +24,14 @@ class Election extends Model
     'start_date',
     'end_date',
     'capacity',
-    'user_id'
+    'visibility',
+    'user_id',
    ];
 
    protected $casts = [
         'title' => 'string',
         'status' => ElectionsStatus::class,
+        'visibility' => Visibility::class,
         'description' => 'string',
         'start_date' => 'datetime',
         'end_date' => 'datetime',

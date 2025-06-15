@@ -56,7 +56,7 @@ mode: "onSubmit",
     end_date: new Date(), // Tambahkan ini
     // status: "upcoming",     // Tambahkan ini
     description: "",      // Tambahkan ini
-
+   visibility: "public"
    
   },
     resolver: zodResolver(electionCreateSchema),
@@ -77,7 +77,7 @@ function onSubmit(input: Elections) {
     formData.append('capacity', input.capacity.toString());
     formData.append('start_date', input.start_date.toISOString());
     formData.append('end_date', input.end_date.toISOString());
-    // formData.append('status', input.status || "active");
+    formData.append('visibility', input.visibility || "public");
     
     if (input.description) {
       formData.append('description', input.description);

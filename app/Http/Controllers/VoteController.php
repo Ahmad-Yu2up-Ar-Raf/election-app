@@ -25,9 +25,7 @@ class VoteController extends Controller
                 $query->withCount('votes');
             }])
             ->withCount('candidates')
-            ->withCount('voters')
-      
-;
+            ->withCount('voters')->where('visibility' , 'public') ;
 
         // Search functionality
         if ($request->has('search') && $request->input('search') !== '') {

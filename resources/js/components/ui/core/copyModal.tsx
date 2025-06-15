@@ -100,11 +100,9 @@ export default function CopyModal({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Share Elections</DialogTitle>
-            <DialogDescription className=" sr-only">
-                  This action cannot be undone. This will permanently delete your{" "}
-            <span className="font-medium">deleted</span>
-        from our servers.
-            </DialogDescription>
+         <DialogDescription>
+            Anyone who has this link will be able to view this.
+          </DialogDescription>
           </DialogHeader>
            <div className="space-y-2">
               <div className="relative">
@@ -162,6 +160,13 @@ export default function CopyModal({
               </div>
         
           </div>
+             <DialogFooter className="sm:justify-start">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
         </DialogContent>
       </Dialog>
     );

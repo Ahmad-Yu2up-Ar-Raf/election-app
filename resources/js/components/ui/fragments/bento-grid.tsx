@@ -107,7 +107,7 @@ function BentoGrid({ items }: BentoGridProps) {
                 tags: [
                     item.status,
                     `${item.candidates_count || 0} candidates`,
-                    new Date(item.end_date) > new Date() ? 'Ongoing' : 'Ended'
+                  
                 ]
             };
         });
@@ -118,9 +118,9 @@ function BentoGrid({ items }: BentoGridProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 max-w-7xl mx-auto">
             {transformedItems.map((item, index) => {
-                 const isMore = item.candidates_count! >= 2
+     
                 const isGanjil = index % 2 !== 0;
-                if(isMore)
+    
                 return(
                 <div  key={index}     className={cn(
                         "group relative p-4 rounded-xl overflow-hidden transition-all duration-300",
@@ -148,7 +148,7 @@ function BentoGrid({ items }: BentoGridProps) {
 
                     <div 
                     onClick={() => {
-                        if (item.status === "ongoing" || item.status === "finished") {  
+                        if (item?.candidates_count! >= 2 && item.status === "ongoing" || item.status === "finished" ) {  
                                router.visit(`/vote/${item.id}`) 
                         }else {
                             toast.warning(`Voting for ${item.title} is not available at the moment.`);

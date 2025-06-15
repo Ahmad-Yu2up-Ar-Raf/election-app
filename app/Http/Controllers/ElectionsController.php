@@ -158,7 +158,7 @@ public function index(Request $request)
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            // 'status' => 'required|string',
+            'visibility' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'capacity' => 'required|integer|min:1',
